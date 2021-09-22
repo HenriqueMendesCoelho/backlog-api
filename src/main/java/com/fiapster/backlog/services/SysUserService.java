@@ -509,6 +509,7 @@ public class SysUserService {
 		SysUser user = repo.findByEmail(email);
 		
 		if(user == null) {
+			
 			throw new IllegalAccessException("Usuário não encontrado.");
 		}
 		
