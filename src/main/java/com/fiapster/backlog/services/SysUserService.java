@@ -514,9 +514,11 @@ public class SysUserService {
 		
 		if(user.isAparecerNoRank()) {
 			user.setAparecerNoRank(false);
+			repo.saveAndFlush(user);
 			return "Usuário não irá mais aparecer no Rank.";
 		}else {
 			user.setAparecerNoRank(true);
+			repo.saveAndFlush(user);
 			return "Usuário voltou a aparecer no Rank.";
 		}
 	}

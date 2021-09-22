@@ -143,8 +143,7 @@ public class UserController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/lock")
-	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email) throws IllegalAccessException {
-		
+	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email) throws IllegalAccessException {	
 		return service.bloqueiaOuDesbloqueiaContaADM(email);
 	}
 	
