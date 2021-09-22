@@ -1,5 +1,6 @@
 package com.fiapster.backlog.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fiapster.backlog.dto.EmailDTO;
 import com.fiapster.backlog.methods.ObterDataEHora;
+import com.fiapster.backlog.models.SysUser;
+import com.fiapster.backlog.repositories.SysUserRepository;
 import com.fiapster.backlog.security.JWTUtil;
 import com.fiapster.backlog.security.SysUserSS;
 import com.fiapster.backlog.services.AuthService;
@@ -28,20 +31,29 @@ public class AuthController {
 	@Autowired
 	private AuthService service;
 	
+	@Autowired
+	private SysUserRepository repo;
+	
 	private ObterDataEHora hora = new ObterDataEHora();
 	
 	@PostMapping("/refresh_token")
-	public ResponseEntity<Void> refreshToken(HttpServletResponse response) {
+	public ResponseEntity<Void> refreshToken(HttpServletResponse response) throws IllegalAccessException {
 		SysUserSS user = SysUserService.authenticated();
-		String token = jwtUtil.generateToken(user.getUsername());
-		response.addHeader("Authorization", "Bearer " + token);
-		response.addHeader("access-control-expose-headers", "Authorization");
-		response.addDateHeader("Expires", hora.obterDataAgora() + jwtUtil.expiration);
-		return ResponseEntity.noContent().build();
+		SysUser userAtual = repo.findByEmail(user.getPassword());
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			String token = jwtUtil.generateToken(user.getUsername());
+			response.addHeader("Authorization", "Bearer " + token);
+			response.addHeader("access-control-expose-headers", "Authorization");
+			response.addDateHeader("Expires", hora.obterDataAgora() + jwtUtil.expiration);
+			return ResponseEntity.noContent().build();
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
 	}
 	
 	@PostMapping("/forgot")
-	public String geraNovaSenha(@RequestBody EmailDTO email) throws Exception{
+	public String geraNovaSenha(@RequestBody EmailDTO email, HttpServletRequest request) throws Exception{
 		service.geraNovaSenha(email.getEmail());
 		return "E-mail enviado.";
 	}

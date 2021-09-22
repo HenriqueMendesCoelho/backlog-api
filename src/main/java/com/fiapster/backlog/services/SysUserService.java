@@ -106,29 +106,34 @@ public class SysUserService {
 		// emailCadastro(user.getEmail());
 	}
 
-	public void updateDadosUser(SysUserUpdateDadosUserDTO user, HttpServletRequest request) {
+	public void updateDadosUser(SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException {
 		String header = request.getHeader("Authorization");
 		SysUser userS = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userS.getQtd_FLogin() < 10) {
+			
+			if (user.getNome() == null || user.getNome() == "" || user.getNome() == userS.getNome()) {
+				userS.setNome(userS.getNome());
+			} else {
+				userS.setNome(user.getNome());
+			}
 
-		if (user.getNome() == null || user.getNome() == "" || user.getNome() == userS.getNome()) {
-			userS.setNome(userS.getNome());
-		} else {
-			userS.setNome(user.getNome());
+			if (user.getEmail() == null || user.getEmail() == "" || user.getEmail() == userS.getEmail()) {
+				userS.setEmail(userS.getEmail());
+			} else {
+				userS.setEmail(user.getEmail());
+			}
+
+			if (user.getCargo() == null || user.getCargo() == "" || user.getCargo() == userS.getCargo()) {
+				userS.setCargo(userS.getCargo());
+			} else {
+				userS.setCargo(user.getCargo());
+			}
+
+			repo.saveAndFlush(userS);
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
-
-		if (user.getEmail() == null || user.getEmail() == "" || user.getEmail() == userS.getEmail()) {
-			userS.setEmail(userS.getEmail());
-		} else {
-			userS.setEmail(user.getEmail());
-		}
-
-		if (user.getCargo() == null || user.getCargo() == "" || user.getCargo() == userS.getCargo()) {
-			userS.setCargo(userS.getCargo());
-		} else {
-			userS.setCargo(user.getCargo());
-		}
-
-		repo.saveAndFlush(userS);
 	}
 
 	public void emailCadastro(String email) {
@@ -141,67 +146,89 @@ public class SysUserService {
 
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
-		user.setStemp(false);
-		user.setCredTmpUses(0);
+		
+		if(user.getQtd_FLogin() < 10) {
+			user.setStemp(false);
+			user.setCredTmpUses(0);
 
-		if (pe.matches(senhaAtual, user.getSenha())) {
-			if (senhaAtual.equalsIgnoreCase(novaSenha)) {
-				throw new IllegalAccessException("Nova senha não pode ter mesma sequência de caracteres/números.");
+			if (pe.matches(senhaAtual, user.getSenha())) {
+				if (senhaAtual.equalsIgnoreCase(novaSenha)) {
+					throw new IllegalAccessException("Nova senha não pode ter mesma sequência de caracteres/números.");
+				} else {
+					user.setSenha(pe.encode(novaSenha));
+				}
 			} else {
-				user.setSenha(pe.encode(novaSenha));
+				throw new IllegalAccessException("Senha incorreta.");
 			}
-		} else {
-			throw new IllegalAccessException("Senha incorreta.");
-		}
 
-		repo.saveAndFlush(user);
+			repo.saveAndFlush(user);
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
+		
 	}
 
-	public void addAdmin(String email) throws IllegalAccessException {
-		SysUser user = repo.findByEmail(email);
+	public void addAdmin(String email, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email);
 
-		if (user == null) {
-			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			if (user == null) {
+				throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			}
+
+			if (user.getPerfis().toString().contains("ADMIN")) {
+				throw new IllegalAccessException(
+						"Usuário " + "'" + email + "'" + " já tem direto de acesso de administrador.");
+			} else {
+				user.addPerfil(Perfil.ADMIN);
+				repo.saveAndFlush(user);
+			}
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
-
-		if (user.getPerfis().toString().contains("ADMIN")) {
-			throw new IllegalAccessException(
-					"Usuário " + "'" + email + "'" + " já tem direto de acesso de administrador.");
-		} else {
-			user.addPerfil(Perfil.ADMIN);
-			repo.saveAndFlush(user);
-		}
-
 	}
 
-	public void removeAdmin(String email) throws IllegalAccessException {
-		SysUser user = repo.findByEmail(email);
+	public void removeAdmin(String email, HttpServletRequest request) throws IllegalAccessException {
+		
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email);
+			if (user == null) {
+				throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			}
 
-		if (user == null) {
-			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			if (user.getPerfis().toString().contains("ADMIN")) {
+				user.removePerfil(Perfil.ADMIN);
+				repo.saveAndFlush(user);
+			} else {
+				throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não é administrador.");
+			}
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
-
-		if (user.getPerfis().toString().contains("ADMIN")) {
-			user.removePerfil(Perfil.ADMIN);
-			repo.saveAndFlush(user);
-		} else {
-			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não é administrador.");
-		}
-
 	}
 
 	public SysUser buscaUser(HttpServletRequest request) throws IllegalAccessException {
 		String header = request.getHeader("Authorization");
 
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
-
+		
 		if (user == null) {
 			throw new IllegalAccessException("Usuário não encontrado");
 		}
-
-		user.setSenha("*****");
-
-		return user;
+		
+		if(user.getQtd_FLogin() <10) {
+			user.setSenha("*****");
+			return user;
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
+		
 	}
 
 	public void updatePontos(HttpServletRequest request) throws IllegalAccessException {
@@ -212,46 +239,48 @@ public class SysUserService {
 
 		if (config != null) {
 			if (user != null) {
-				// Intervalo reset 720; intervalo Max 60; intervalo intermediario 35; intervalo
-				// minimo 2
-				double horaExecUser = data.obterIntevaloHoraEmMinutos(user.getData_exec());
+				if(user.getQtd_FLogin() < 10) {
+					double horaExecUser = data.obterIntevaloHoraEmMinutos(user.getData_exec());
 
-				if (user.getData_exec() == 0) {
-					user.setPontos(user.getPontos() + config.getPontosPrimeiraExec());
-					user.setCreditos(user.getCreditos() + config.getCreditosPrimeiraExec());
-					user.setData_exec(data.obterDataAgora());
-					System.out.println("Entrei");
-					System.out.println("Data exec: " + user.getData_exec());
-				} else {
-					if (horaExecUser > config.getIntervaloReset()) { // Intervalo Reset
-						user.setPontos(user.getPontos() + config.getPontosReset());
-						user.setCreditos(user.getCreditos() + config.getCreditosReset());
+					if (user.getData_exec() == 0) {
+						user.setPontos(user.getPontos() + config.getPontosPrimeiraExec());
+						user.setCreditos(user.getCreditos() + config.getCreditosPrimeiraExec());
 						user.setData_exec(data.obterDataAgora());
-					} else if (horaExecUser > config.getIntervaloMax() && horaExecUser <= config.getIntervaloReset()) { // Intervalo
-																														// Max
-						user.setPontos(user.getPontos() + config.getPontosIntervalMax());
-						user.setCreditos(user.getCreditos() + config.getCreditosIntervalMax());
-						user.setData_exec(data.obterDataAgora());
-					} else if (horaExecUser > config.getIntervaloIntermediario()
-							&& horaExecUser <= config.getIntervaloMax()) { // Intervalo Intermediario
-						user.setPontos(user.getPontos() + config.getPontosIntervalInter());
-						user.setCreditos(user.getCreditos() + config.getCreditosIntervalInter());
-						user.setData_exec(data.obterDataAgora());
-					} else if (horaExecUser <= config.getIntervaloIntermediario()
-							&& horaExecUser >= config.getIntervaloMin()) { // Intervalo Min
-						user.setPontos(user.getPontos() + config.getPontosIntervalMin());
-						user.setCreditos(user.getCreditos() + config.getCreditosIntervalMin());
-						user.setData_exec(data.obterDataAgora());
-
+						System.out.println("Entrei");
+						System.out.println("Data exec: " + user.getData_exec());
 					} else {
-						user.setPontos(user.getPontos() + 0);
-						user.setCreditos(user.getCreditos() + 0);
-						user.setData_exec(data.obterDataAgora());
-					}
+						if (horaExecUser > config.getIntervaloReset()) { // Intervalo Reset
+							user.setPontos(user.getPontos() + config.getPontosReset());
+							user.setCreditos(user.getCreditos() + config.getCreditosReset());
+							user.setData_exec(data.obterDataAgora());
+						} else if (horaExecUser > config.getIntervaloMax() && horaExecUser <= config.getIntervaloReset()) { // Intervalo
+																															// Max
+							user.setPontos(user.getPontos() + config.getPontosIntervalMax());
+							user.setCreditos(user.getCreditos() + config.getCreditosIntervalMax());
+							user.setData_exec(data.obterDataAgora());
+						} else if (horaExecUser > config.getIntervaloIntermediario()
+								&& horaExecUser <= config.getIntervaloMax()) { // Intervalo Intermediario
+							user.setPontos(user.getPontos() + config.getPontosIntervalInter());
+							user.setCreditos(user.getCreditos() + config.getCreditosIntervalInter());
+							user.setData_exec(data.obterDataAgora());
+						} else if (horaExecUser <= config.getIntervaloIntermediario()
+								&& horaExecUser >= config.getIntervaloMin()) { // Intervalo Min
+							user.setPontos(user.getPontos() + config.getPontosIntervalMin());
+							user.setCreditos(user.getCreditos() + config.getCreditosIntervalMin());
+							user.setData_exec(data.obterDataAgora());
 
+						} else {
+							user.setPontos(user.getPontos() + 0);
+							user.setCreditos(user.getCreditos() + 0);
+							user.setData_exec(data.obterDataAgora());
+						}
+
+					}
+					user.setNivel(updateNivel(user.getPontos()));
+					repo.saveAndFlush(user);
+				}else {
+					throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 				}
-				user.setNivel(updateNivel(user.getPontos()));
-				repo.saveAndFlush(user);
 			}
 		} else {
 			throw new IllegalAccessException(
@@ -276,12 +305,18 @@ public class SysUserService {
 	@CrossOrigin(origins = "*")
 	public String deletUser(String email, HttpServletResponse response) throws IllegalAccessException {
 		SysUser user = repo.findByEmail(email);
-		if (user != null) {
-			repo.deleteById(user.getId());
-			return "Usuário deletado.";
-		} else {
+		
+		if(user != null) {
+			if (user.getQtd_FLogin() < 10) {
+				repo.deleteById(user.getId());
+				return "Usuário deletado.";
+			} else {
+				throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			}
+		}else {
 			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
 		}
+		
 	}
 
 	public List<SysUserRankDTO> getRank() {
@@ -320,150 +355,165 @@ public class SysUserService {
 		ConfigSystem config = repoConfig.getById(1);
 
 		if (config != null) {
-
-			switch (item) {
-			case "PONTUAL":
-				if (user.getCreditos() - config.getPreco_pontual() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_pontual());
-					user.addItem(Item.PONTUAL);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+			if(user.getQtd_FLogin() < 10) {
+				switch (item) {
+				case "PONTUAL":
+					if (user.getCreditos() - config.getPreco_pontual() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_pontual());
+						user.addItem(Item.PONTUAL);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				case "ALCOOL":
+					if (user.getCreditos() - config.getPreco_alcool() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_alcool());
+						user.addItem(Item.ALCOOL);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				case "CRUZ":
+					if (user.getCreditos() - config.getPreco_cruz() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_cruz());
+						user.addItem(Item.CRUZ);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				case "COROA":
+					if (user.getCreditos() - config.getPreco_coroa() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_coroa());
+						user.addItem(Item.COROA);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				case "PERSISTENTE":
+					if (user.getCreditos() - config.getPreco_persistente() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_persistente());
+						user.addItem(Item.PERSISTENTE);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				case "SUPER_LIMPO":
+					if (user.getCreditos() - config.getPreco_superLimpo() >= 0) {
+						user.setCreditos(user.getCreditos() - config.getPreco_superLimpo());
+						user.addItem(Item.SUPER_LIMPO);
+					} else {
+						throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
+					}
+					break;
+				default:
+					throw new IllegalAccessException("Não existe um item com o nome de " + "'" + item + "'.");
 				}
-				break;
-			case "ALCOOL":
-				if (user.getCreditos() - config.getPreco_alcool() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_alcool());
-					user.addItem(Item.ALCOOL);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
-				}
-				break;
-			case "CRUZ":
-				if (user.getCreditos() - config.getPreco_cruz() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_cruz());
-					user.addItem(Item.CRUZ);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
-				}
-				break;
-			case "COROA":
-				if (user.getCreditos() - config.getPreco_coroa() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_coroa());
-					user.addItem(Item.COROA);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
-				}
-				break;
-			case "PERSISTENTE":
-				if (user.getCreditos() - config.getPreco_persistente() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_persistente());
-					user.addItem(Item.PERSISTENTE);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
-				}
-				break;
-			case "SUPER_LIMPO":
-				if (user.getCreditos() - config.getPreco_superLimpo() >= 0) {
-					user.setCreditos(user.getCreditos() - config.getPreco_superLimpo());
-					user.addItem(Item.SUPER_LIMPO);
-				} else {
-					throw new IllegalAccessException("Usuário não tem saldo para comprar o item: " + "'" + item + "'.");
-				}
-				break;
-			default:
-				throw new IllegalAccessException("Não existe um item com o nome de " + "'" + item + "'.");
+				repo.saveAndFlush(user);
+			}else {
+				throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 			}
-			repo.saveAndFlush(user);
 		} else {
 			throw new IllegalAccessException(
 					"Não existem configurações do sistema na base impossível executar a compra de itens.");
 		}
 	}
 
-	public String rmvOuAddItem(String email, String item) throws IllegalAccessException {
+	public String rmvOuAddItem(String email, String item, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
 		SysUser user = repo.findByEmail(email);
 		String retorno;
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			if (user == null) {
+				throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			}
 
-		if (user == null) {
-			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			switch (item) {
+			case "PONTUAL":
+				if (!user.getItens().toString().contains("PONTUAL")) {
+					user.addItem(Item.PONTUAL);
+					retorno= "Item adicionado.";
+				}else {
+					user.removeItem(Item.PONTUAL);
+					retorno= "Item removido.";
+				}
+				break;
+			case "ALCOOL":
+				if (!user.getItens().toString().contains("ALCOOL")) {
+					retorno= "Item adicionado.";
+					user.addItem(Item.ALCOOL);
+				}else {
+					retorno= "Item removido.";
+					user.removeItem(Item.ALCOOL);
+				}
+				break;
+			case "CRUZ":
+				if (!user.getItens().toString().contains("BORRIFADOR")) {
+					user.addItem(Item.CRUZ);
+					retorno= "Item adicionado.";
+				}else {
+					user.removeItem(Item.CRUZ);
+					retorno= "Item removido.";
+				}
+				break;
+			case "COROA":
+				if (!user.getItens().toString().contains("COROA")) {
+					user.addItem(Item.COROA);
+					retorno= "Item adicionado.";
+				}else {
+					user.removeItem(Item.COROA);
+					retorno= "Item removido.";
+				}
+				
+				break;
+			case "PERSISTENTE":
+				if (!user.getItens().toString().contains("PERSISTENTE")) {
+					user.addItem(Item.PERSISTENTE);
+					retorno= "Item adicionado.";
+				}else {
+					user.removeItem(Item.PERSISTENTE);
+					retorno= "Item removido.";
+				}
+				
+				break;
+			case "SUPER_LIMPO":
+				if (!user.getItens().toString().contains("SUPER_LIMPO")) {
+					user.addItem(Item.SUPER_LIMPO);
+					retorno= "Item adicionado.";
+				}else {
+					user.removeItem(Item.SUPER_LIMPO);
+					retorno= "Item removido.";
+				}
+				
+				break;
+			default:
+				throw new IllegalAccessException("Não existe um item com o nome de " + "'" + item + "'.");
+			}
+			repo.saveAndFlush(user);
+			return retorno;
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
-
-		switch (item) {
-		case "PONTUAL":
-			if (!user.getItens().toString().contains("PONTUAL")) {
-				user.addItem(Item.PONTUAL);
-				retorno= "Item adicionado.";
-			}else {
-				user.removeItem(Item.PONTUAL);
-				retorno= "Item removido.";
-			}
-			break;
-		case "ALCOOL":
-			if (!user.getItens().toString().contains("ALCOOL")) {
-				retorno= "Item adicionado.";
-				user.addItem(Item.ALCOOL);
-			}else {
-				retorno= "Item removido.";
-				user.removeItem(Item.ALCOOL);
-			}
-			break;
-		case "CRUZ":
-			if (!user.getItens().toString().contains("BORRIFADOR")) {
-				user.addItem(Item.CRUZ);
-				retorno= "Item adicionado.";
-			}else {
-				user.removeItem(Item.CRUZ);
-				retorno= "Item removido.";
-			}
-			break;
-		case "COROA":
-			if (!user.getItens().toString().contains("COROA")) {
-				user.addItem(Item.COROA);
-				retorno= "Item adicionado.";
-			}else {
-				user.removeItem(Item.COROA);
-				retorno= "Item removido.";
-			}
-			
-			break;
-		case "PERSISTENTE":
-			if (!user.getItens().toString().contains("PERSISTENTE")) {
-				user.addItem(Item.PERSISTENTE);
-				retorno= "Item adicionado.";
-			}else {
-				user.removeItem(Item.PERSISTENTE);
-				retorno= "Item removido.";
-			}
-			
-			break;
-		case "SUPER_LIMPO":
-			if (!user.getItens().toString().contains("SUPER_LIMPO")) {
-				user.addItem(Item.SUPER_LIMPO);
-				retorno= "Item adicionado.";
-			}else {
-				user.removeItem(Item.SUPER_LIMPO);
-				retorno= "Item removido.";
-			}
-			
-			break;
-		default:
-			throw new IllegalAccessException("Não existe um item com o nome de " + "'" + item + "'.");
-		}
-		repo.saveAndFlush(user);
-		return retorno;
 	}
 
-	public String addPontosECreditosADM(String email, int valorPontos, int valorCreditos)
-			throws IllegalAccessException {
-		SysUser user = repo.findByEmail(email);
-		if (user != null) {
-			user.setPontos(user.getPontos() + valorPontos);
-			user.setCreditos(user.getCreditos() + valorCreditos);
-			user.setNivel(updateNivel(user.getPontos()));
-			repo.saveAndFlush(user);
-			return "Pontos e créditos adicionados.";
-		} else {
-			throw new IllegalAccessError("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+	public String addPontosECreditosADM(String email, int valorPontos, int valorCreditos, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email);
+			if (user != null) {
+				user.setPontos(user.getPontos() + valorPontos);
+				user.setCreditos(user.getCreditos() + valorCreditos);
+				user.setNivel(updateNivel(user.getPontos()));
+				repo.saveAndFlush(user);
+				return "Pontos e créditos adicionados.";
+			} else {
+				throw new IllegalAccessError("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
+			}
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
@@ -480,56 +530,80 @@ public class SysUserService {
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 
-		if (user != null) {
+		if(user.getQtd_FLogin() < 10) {
 			if (pe.matches(senha, user.getSenha())) {
 				return "true";
+			}else {
+				throw new IllegalAccessException("Senha incorreta.");
 			}
-		}
-
-		throw new IllegalAccessException("Senha incorreta.");
-	}
-
-	public String bloqueiaOuDesbloqueiaContaADM(EmailDTO email) {
-		SysUser user = repo.findByEmail(email.getEmail());
-		if (user != null) {
-			if (user.getQtd_FLogin() >= 10) {
-				user.setQtd_FLogin(5);
-				repo.saveAndFlush(user);
-				return "Conta do usuário desbloqueada.";
-			} else {
-				user.setQtd_FLogin(10);
-				repo.saveAndFlush(user);
-				return "Conta do usuário bloqueada.";
-			}
-		}
-		throw new IllegalAccessError("Usuário não encontrado");
-	}
-	
-	public String escondeOuMostraNoRank(String email) throws IllegalAccessException {
-		SysUser user = repo.findByEmail(email);
-		
-		if(user == null) {
-			
-			throw new IllegalAccessException("Usuário não encontrado.");
-		}
-		
-		if(user.isAparecerNoRank()) {
-			user.setAparecerNoRank(false);
-			repo.saveAndFlush(user);
-			return "Usuário não irá mais aparecer no Rank.";
 		}else {
-			user.setAparecerNoRank(true);
-			repo.saveAndFlush(user);
-			return "Usuário voltou a aparecer no Rank.";
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
+	}
+
+	public String bloqueiaOuDesbloqueiaContaADM(EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email.getEmail());
+			if (user != null) {
+				if (user.getQtd_FLogin() >= 10) {
+					user.setQtd_FLogin(5);
+					repo.saveAndFlush(user);
+					return "Conta do usuário desbloqueada.";
+				} else {
+					user.setQtd_FLogin(10);
+					repo.saveAndFlush(user);
+					return "Conta do usuário bloqueada.";
+				}
+			}else {
+				throw new IllegalAccessError("Usuário não encontrado");
+			}
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
 	}
 	
-	public SysUser buscaPorEmailADM(String email) throws IllegalAccessException {
-		SysUser user = repo.findByEmail(email);
-		if(user == null) {
-			throw new IllegalAccessException("Usuário não encontrado.");
+	public String escondeOuMostraNoRank(String email, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email);
+			
+			if(user == null) {
+				
+				throw new IllegalAccessException("Usuário não encontrado.");
+			}
+			
+			if(user.isAparecerNoRank()) {
+				user.setAparecerNoRank(false);
+				repo.saveAndFlush(user);
+				return "Usuário não irá mais aparecer no Rank.";
+			}else {
+				user.setAparecerNoRank(true);
+				repo.saveAndFlush(user);
+				return "Usuário voltou a aparecer no Rank.";
+			}
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}
-		user.setSenha("*****");
-		return user;
+	}
+	
+	public SysUser buscaPorEmailADM(String email, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
+		if(userAtual.getQtd_FLogin() < 10) {
+			SysUser user = repo.findByEmail(email);
+			if(user == null) {
+				throw new IllegalAccessException("Usuário não encontrado.");
+			}
+			user.setSenha("*****");
+			return user;
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
 	}
 }

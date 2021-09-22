@@ -2,6 +2,7 @@ package com.fiapster.backlog.services;
 
 import java.util.Random;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,27 +32,23 @@ public class AuthService {
 		
 		SysUser user = repo.findByEmail(email);
 		if(user != null) {
-			String novaSenha = novaSenha();
-			user.setSenha(pe.encode(novaSenha));
-			
-			user.setStemp(true);
-			user.setCredTmpUses(0);
-			repo.save(user);
-			
-			emailService.sendNovaSenhaEmail(user, novaSenha);
-		}else {
-			int opt = rand.nextInt(3);
-			if(opt == 0) {
-				int opt1 = rand.nextInt(689);
-				Thread.sleep(10000 + opt1);
-			}else if(opt == 1){
-				int opt1 = rand.nextInt(489);
-				Thread.sleep(12000 + opt1);
+			if(user.getQtd_FLogin() < 10) {
+				String novaSenha = novaSenha();
+				user.setSenha(pe.encode(novaSenha));
+				
+				user.setStemp(true);
+				user.setCredTmpUses(0);
+				repo.save(user);
+				
+				emailService.sendNovaSenhaEmail(user, novaSenha);
 			}else {
-				int opt1 = rand.nextInt(789);
-				Thread.sleep(15000 + opt1);
+				int opt = rand.nextInt(4000);
+				Thread.sleep(10000 + opt);
 			}
 			
+		}else {
+			int opt = rand.nextInt(4000);
+			Thread.sleep(10000 + opt);
 		}
 		
 	}

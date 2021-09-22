@@ -77,7 +77,7 @@ public class UserController {
 	
 	// Soma uma quantidade de pontos para o usuario
 	@PatchMapping("/update")
-	public void updateDadosUser(@RequestBody SysUserUpdateDadosUserDTO user, HttpServletRequest request) {
+	public void updateDadosUser(@RequestBody SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException {
 		service.updateDadosUser(user, request);
 	}
 	
@@ -105,16 +105,16 @@ public class UserController {
 	//Adiciona direito de acesso admin para usuário
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/add")
-	public String addAdmin(@RequestBody SysUserPerfilDTO user) throws IllegalAccessException {
-		service.addAdmin(user.getEmail());
+	public String addAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException {
+		service.addAdmin(user.getEmail(), request);
 		return "Direito de acesso adicionado ao usuário.";
 	}
 	
 	//Remove direito de acesso admin para usuário
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/rmv")
-	public String removeAdmin(@RequestBody SysUserPerfilDTO user, HttpServletResponse response) throws IllegalAccessException {
-		service.removeAdmin(user.getEmail());
+	public String removeAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException {
+		service.removeAdmin(user.getEmail(), request);
 		return "Direito de acesso removido do usuário.";
 	}
 	
@@ -126,14 +126,14 @@ public class UserController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/item/rmv")
-	public String rmvOuAddItem(@RequestBody SysUserRemoveItemDTO user) throws IllegalAccessException {
-		return service.rmvOuAddItem(user.getEmail(), user.getItem());
+	public String rmvOuAddItem(@RequestBody SysUserRemoveItemDTO user, HttpServletRequest request) throws IllegalAccessException {
+		return service.rmvOuAddItem(user.getEmail(), user.getItem(), request);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/addcp")
-	public String addPontosECreditos(@RequestBody SysUserAddPontosECreditosDTO user) throws IllegalAccessException {
-		return service.addPontosECreditosADM(user.getEmail(), user.getPontos(), user.getCreditos());
+	public String addPontosECreditos(@RequestBody SysUserAddPontosECreditosDTO user, HttpServletRequest request) throws IllegalAccessException {
+		return service.addPontosECreditosADM(user.getEmail(), user.getPontos(), user.getCreditos(), request);
 	}
 	
 	@PostMapping("/valid")
@@ -143,18 +143,18 @@ public class UserController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/lock")
-	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email) throws IllegalAccessException {	
-		return service.bloqueiaOuDesbloqueiaContaADM(email);
+	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {	
+		return service.bloqueiaOuDesbloqueiaContaADM(email, request);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/srank")
-	public String apareNoRank(@RequestBody EmailDTO email) throws IllegalAccessException {
-		return service.escondeOuMostraNoRank(email.getEmail());
+	public String apareNoRank(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+		return service.escondeOuMostraNoRank(email.getEmail(), request);
 	}
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/adm/busca")
-	public SysUser buscaPorEmail(@RequestBody EmailDTO email) throws IllegalAccessException {
-		return service.buscaPorEmailADM(email.getEmail());
+	public SysUser buscaPorEmail(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+		return service.buscaPorEmailADM(email.getEmail(), request);
 	}
 }

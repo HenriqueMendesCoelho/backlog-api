@@ -34,8 +34,8 @@ public class ConfigSystemController {
 	
 	@GetMapping("/adm")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ConfigSystem getConfig() throws Exception {	
-		return service.getConfig();
+	public ConfigSystem getConfig(HttpServletRequest request) throws IllegalAccessException {	
+		return service.getConfig(request);
 	}
 	
 	@GetMapping("/store")
