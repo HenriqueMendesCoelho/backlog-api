@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <style type="text/css">
+    </style>
+    <link rel="stylesheet" href="/style/modal.css" type="text/css" />
+</head>
+
+
+<div width="100%" class="main" valign="top" align="center"
+    style="border: 0px none transparent; background-color: rgb(25, 25, 55);">
+
+
+    <div>
+        <table
+            style="border-radius: 0px; border-collapse: separate; border-spacing: 0px; border: 0px none transparent;">
+            <tbody>
+                <tr>
+
+                    <td width="100%" class="main" valign="top" align="center"
+                        style="border: 0px none transparent; background-color: rgb(7, 7, 32);">
+
+                        <div id="dv_logo" class="main">
+                            <table class="blk" width="600" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <table width="100%" border="0">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="Image"
+                                                            style="padding: 20px; border-collapse: collapse;"
+                                                            align="center">
+                                                            <img src="https://cdn.discordapp.com/attachments/882813654402220083/882814176811180122/Logo_-_BackLog.png"
+                                                                alt="Logo" height="250" width="250">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="dv_dados" class="mid-main">
+                            <table width="600" border="0" class="main">
+                                <tbody>
+                                    <tr>
+                                        <td>
+
+                                            <table border="0" width="100%" class="main">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="Text" valign="top" align="left">
+
+                                                            <table border="0" width="600"
+                                                                style="float:left; background-color:transparent;"
+                                                                align="left" class="tblText">
+
+
+                                                                <div style="line-height: 125%; text-align: center;">
+                                                                    <span
+                                                                        style="font-size: 32px; font-family: Impact, Chicago; color: #ffffff; line-height: 125%;">
+                                                                        <em>
+                                                                            <strong>
+                                                                                <p th:text="${'Olá ' + usuario.nome}">
+
+
+                                                                                </p>                                                             
+
+
+                                                                <div
+                                                                    style="line-height: 125%; text-align: justify; padding-left: 10px; padding-right: 10px;">
+                                                                    <span
+                                                                        style="font-size: 22px; font-family: Anonymous Pro ; color: #ffffff; line-height: 100%;">
+                                                                        <em>
+                                                                            <p>
+                                                                                    Recebemos um pedido para redefinir
+                                                                                    sua senha. Confirme o pedido de
+                                                                                    redefinição de senha para escolher
+                                                                                    uma nova senha. Caso não deseje
+                                                                                    mudar a sua senha, você pode ignorar
+                                                                                    este e-mail.
+
+                                                                            <P>
+                                                                                Segue senha temporária:
+
+                                                                            </P>
+
+                                                                            <p th:text="${'Senha:' + nova_senha}">
+
+                                                                            </p>
+
+
+                                                                            Lembrando que não utilizamos seus dados
+                                                                            e eles estão seguros conosco.<br>
+
+                                                                            Bom jogo!<br>
+
+                                                                            </p>
+
+                                                                        </em>
+                                                                    </span>
+
+
+                                                                </div>
+
+                                                                <table border="0" align="center">
+                                                                    <td>
+                                                                        <a href="http://fiapster.ddns.net:8090/">
+                                                                            <button
+                                                                                style="background: rgb(255, 255, 255); border-radius: 6px; padding: 20px 35px; cursor: pointer; color: rgb(0, 0, 0); border: none; font-size: 16px;">
+
+                                                                                Acesse
+
+                                                                            </button>
+                                                                        </a>
+                                                                    </td>
+                                                                </table>
+
+                                                                <table
+                                                                    style="font-family:arial,helvetica,sans-serif; background-color: rgb(25, 25, 55);"
+                                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                                    width="100%" border="0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <p>
+                                                                                <td class="Image"
+                                                                                    style="padding: 10px; border-collapse: collapse;"
+                                                                                    align="left">
+                                                                                    <img src="https://cdn.discordapp.com/attachments/880271045431525416/886873892738715648/logo_fiap.png"
+                                                                                        alt="Logo_FIAP" height="45"
+                                                                                        width="150">
+
+                                                                                </td>
+                                                                                <td class="Image"
+                                                                                    style="padding: 10px; border-collapse: collapse;"
+                                                                                    align="right">
+                                                                                    <img src="https://cdn.discordapp.com/attachments/882813654402220083/886883953812836362/cor_oswaldo_cruz.png"
+                                                                                        alt="Logo_OswaldoCruz"
+                                                                                        height="100" width="150">
+                                                                                </td>
+                                                                            </p>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                                <table style="font-family:arial,helvetica,sans-serif;"
+                                                                    role="presentation" cellpadding="0" cellspacing="0"
+                                                                    width="100%" border="0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class="down-main"
+                                                                                style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:arial,helvetica,sans-serif;"
+                                                                                align="left">
+
+                                                                                <div class="v-text-align"
+                                                                                    style="color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word;">
+                                                                                    <p
+                                                                                        style="font-size: 10px; line-height: 140%;">
+                                                                                        <span
+                                                                                            style="font-family: arial, helvetica, sans-serif; font-size: 14px; line-height: 19.6px;">
+                                                                                            <em>
+                                                                                                <strong>
+                                                                                                    Copyright &copy;
+                                                                                                    FIAPSTER-BACKLOG
+                                                                                                    2021.<br>
+                                                                                                    Todos
+                                                                                                    os direitos
+                                                                                                    reservados.
+                                                                                                </strong>
+                                                                                            </em>
+                                                                                        </span>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</html>
