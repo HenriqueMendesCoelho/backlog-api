@@ -303,11 +303,14 @@ public class SysUserService {
 	}
 
 	@CrossOrigin(origins = "*")
-	public String deletUser(String email, HttpServletResponse response) throws IllegalAccessException {
+	public String deletUser(String email, HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
 		SysUser user = repo.findByEmail(email);
 		
 		if(user != null) {
-			if (user.getQtd_FLogin() < 10) {
+			if (userAtual.getQtd_FLogin() < 10) {
 				repo.deleteById(user.getId());
 				return "Usuário deletado.";
 			} else {
@@ -346,6 +349,22 @@ public class SysUserService {
 		}
 
 		return listaDeUsuario;
+	}
+	
+	public List<SysUser> getListaUSerADM(HttpServletRequest request) throws IllegalAccessException {
+		String header = request.getHeader("Authorization");
+		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		if(userAtual.getQtd_FLogin() < 10) {
+			List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
+			for (SysUser SysUser : repo.findAllByOrderByPontosDesc()) {
+				SysUser.setSenha("*****");
+				listaDeUsuario.add(SysUser);
+			}
+
+			return listaDeUsuario;
+		}else {
+			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+		}
 	}
 
 	public void addItem(String item, HttpServletRequest request) throws IllegalAccessException {

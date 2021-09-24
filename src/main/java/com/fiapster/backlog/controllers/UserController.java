@@ -50,7 +50,7 @@ public class UserController {
 	
 	// Busca usuario pelo email
 	@GetMapping("/busca")
-	public SysUser buscaUsuarioPorEmail(HttpServletRequest request, HttpServletResponse response) throws IllegalAccessException {
+	public SysUser buscaUsuarioPorEmail(HttpServletRequest request) throws IllegalAccessException {
 		return service.buscaUser(request);
 	}
 	
@@ -63,9 +63,9 @@ public class UserController {
 	// Deleta o usuario
 	@DeleteMapping("/adm/del")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String deletarUser(@RequestBody SysUserCredenciaisDTO user, HttpServletResponse response) throws IllegalAccessException {
+	public String deletarUser(@RequestBody SysUserCredenciaisDTO user, HttpServletRequest request) throws IllegalAccessException {
 		
-		return service.deletUser(user.getEmail(), response);
+		return service.deletUser(user.getEmail(), request);
 	}
 	
 	// Soma uma quantidade de pontos para o usuario
@@ -152,9 +152,16 @@ public class UserController {
 	public String apareNoRank(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
 		return service.escondeOuMostraNoRank(email.getEmail(), request);
 	}
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/adm/busca")
 	public SysUser buscaPorEmail(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
 		return service.buscaPorEmailADM(email.getEmail(), request);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/rank/adm")
+	public List<SysUser> buscaListaUsuarioADM(HttpServletRequest request) throws IllegalAccessException {
+		return service.getListaUSerADM(request);
 	}
 }
