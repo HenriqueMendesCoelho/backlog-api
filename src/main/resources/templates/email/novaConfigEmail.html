@@ -79,21 +79,35 @@
                                                                         style="font-size: 22px; font-family: Anonymous Pro ; color: #ffffff; line-height: 100%;">
                                                                         <em>
                                                                             <p>
-                                                                                    Recebemos um pedido para redefinir
-                                                                                    sua senha. Confirme o pedido de
-                                                                                    redefinição de senha para escolher
-                                                                                    uma nova senha. Caso não deseje
-                                                                                    mudar a sua senha, você pode ignorar
-                                                                                    este e-mail.
+                                                                                    As configurações do sistema foram alteradadas, veja mais detalhes abaixo.
 
                                                                             <P>
-                                                                                Segue senha temporária:
-
+                                                                                Novos preços:
+                                                                                <p th:text="${'- Pontual: ' + config.preco_pontual}"></p>
+                                                                                <p th:text="${'- Coroa: ' + config.preco_coroa}"></p>
+                                                                                <p th:text="${'- Super limpo: ' + config.preco_superLimpo}"></p>
+                                                                                <p th:text="${'- Persistente: ' + config.preco_persistente}"></p>
+                                                                                <p th:text="${'- Cruz Vermelha: ' + config.preco_cruz}"></p>
+                                                                                <p th:text="${'- All Cool: ' + config.preco_alcool}"></p>
+                                                                            </P>
+                                                                            <P>
+                                                                                Recompensas(badges) recebidas por experiência e engajamento:
+                                                                                <p th:text="${'- Rookie: Recebida ao atingir o nível ' + config.nivelBadge1}"></p>
+                                                                                <p th:text="${'- Pro: Recebida ao atingir o nível ' + config.nivelBadge2}"></p>
+                                                                                <p th:text="${'- Master: Recebida ao atingir o nível ' + config.nivelBadge3}"></p>
+                                                                                <p th:text="${'- Expert: Recebida ao atingir o nível ' + config.nivelBadge4}"></p>
+                                                                                <p th:text="${'Lembrando que cada nível equivale ' + config.pontosNivel + ' pontos.'}"></p>
+                                                                            </P>
+                                                                            <P>
+                                                                                Configuração de lavagens:
+                                                                                <p th:text="${'A partir de agora, serão garantidos ' + config.pontosPrimeiraExec + ' pontos e ' + config.creditosPrimeiraExec + ' creditos na primeira lavagem registrada pela conta.'}"></p>
+                                                                                <p th:text="${'Considerando que já fez a primeira lavagem do dia, Se registrada outra lavagem após ' + config.intervaloMin + ' minutos, serão ganhos ' + config.pontosIntervalMin + ' pontos e ' + config.creditosIntervalMin + ' creditos na lavagem registrada,'}"></p>
+                                                                                <p th:text="${'Caso passem '  + config.intervaloIntermediario + ' minutos, passam a ser ganhos ' + config.pontosIntervalInter + ' pontos e ' + config.creditosIntervalInter + ' creditos na lavagem registrada,'}"></p>
+                                                                                <p th:text="${'Caso passem ' + config.intervaloMax + ' minutos, passam a ser ganhos ' + config.pontosIntervalMax + ' pontos e ' + config.creditosIntervalMax + ' creditos na lavagem registrada,'}"></p>
+                                                                                <p th:text="${'Chegado o valor de ' + config.intervaloReset + ' minutos o contador é interrompido considerando que foi encerrado o expediente, e serão ganhos ' + config.pontosReset + ' pontos e ' + config.creditosReset + ' creditos na próxima vez que uma lavagem for registrada.'}"></p>
                                                                             </P>
 
-                                                                            <p th:text="${'Senha:' + nova_senha}">
-
-                                                                            </p>
+                                                                            
 
 
                                                                             Lembrando que não utilizamos seus dados
@@ -111,11 +125,11 @@
 
                                                                 <table border="0" align="center">
                                                                     <td>
-                                                                        <a href="http://fiapster.ddns.net:8090/">
+                                                                        <a href="http://backlog.ddns.net:8090/">
                                                                             <button
                                                                                 style="background: rgb(255, 255, 255); border-radius: 6px; padding: 20px 35px; cursor: pointer; color: rgb(0, 0, 0); border: none; font-size: 16px;">
 
-                                                                                Acesse
+                                                                                Acesse e confira
 
                                                                             </button>
                                                                         </a>
