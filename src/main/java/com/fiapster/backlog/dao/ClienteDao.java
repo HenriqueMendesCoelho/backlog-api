@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.servlet.http.HttpServletResponse;
+
+import com.fiapster.backlog.exceptions.ApiBadRequestException;
 import com.fiapster.backlog.methods.ObterDataEHora;
 import com.fiapster.backlog.models.Cliente;
 import com.fiapster.backlog.util.DbUtilCurso;
-import com.sun.xml.txw2.IllegalAnnotationException;
 
 
 public class ClienteDao {
@@ -19,24 +21,24 @@ public class ClienteDao {
 		connectionCliente = DbUtilCurso.getConnection();
 	}
 
-	public String CadastroCliente(Cliente user) {
+	public String CadastroCliente(Cliente user, HttpServletResponse response) throws ApiBadRequestException{
 		try {
 			ObterDataEHora data = new ObterDataEHora();
 
 			if (user.getFirstName() == "" || user.getFirstName() == null) {
-				throw new IllegalArgumentException("FirstName não pode ser nulo");
+				throw new ApiBadRequestException("FirstName não pode ser nulo");
 			}
 			if (user.getLastName() == "" || user.getLastName() == null) {
-				throw new IllegalArgumentException("LastName não pode ser nulo");
+				throw new ApiBadRequestException("LastName não pode ser nulo");
 			}
 			if (user.getEmail() == "" || user.getEmail() == null) {
-				throw new IllegalArgumentException("Email não pode ser nulo");
+				throw new ApiBadRequestException("Email não pode ser nulo");
 			}
 			if (user.getCpf() == "" || user.getCpf() == null) {
-				throw new IllegalArgumentException("CPG não pode ser nulo");
+				throw new ApiBadRequestException("CPG não pode ser nulo");
 			}
 			if (user.getRg() == "" || user.getRg() == null) {
-				throw new IllegalArgumentException("RG não pode ser nulo");
+				throw new ApiBadRequestException("RG não pode ser nulo");
 			}
 
 			PreparedStatement preparedStatement = connectionCliente.prepareStatement(
@@ -51,17 +53,15 @@ public class ClienteDao {
 			preparedStatement.executeUpdate();
 			return "Usuário cadastrado!";
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return e.getMessage();
-
+			throw new ApiBadRequestException(e.getMessage());
 		}
 	}
 
 	public Cliente getUserByCPF(String cpf) throws Exception {
 		try {
-			Cliente user = new Cliente(0, null, null, null, null, null, null);
+			Cliente user = new Cliente();
 			if (cpf == null || cpf == "") {
-				throw new IllegalAnnotationException("Email não pode ser nulo");
+				throw new ApiBadRequestException("Email não pode ser nulo");
 			}
 
 			PreparedStatement preparedStatement = connectionCliente
@@ -80,7 +80,7 @@ public class ClienteDao {
 			}
 
 			if (user.getFirstName() == null || user.getFirstName() == "") {
-				throw new IllegalArgumentException("Usuário não encontrado.");
+				throw new ApiBadRequestException("Usuário não encontrado.");
 			}
 			return user;
 
@@ -91,25 +91,42 @@ public class ClienteDao {
 		}
 	}
 	
-	public void deleteUser(String email) {
+	public void deleteUser(String email) throws Exception {
         try {
         	
+        	if(email == "" || email == null) {
+        		throw new ApiBadRequestException("E-mail não pode estar vazio.");
+        	}
+        	
+        	Cliente user = new Cliente();
+        	
+        	PreparedStatement preparedStatementCli = connectionCliente
+					.prepareStatement("select * from clientes where email=?");
+			preparedStatementCli.setString(1, email);
+			ResultSet rs = preparedStatementCli.executeQuery();
+			
+			if (rs.next()) {
+				user.setId(rs.getInt("id"));
+				user.setFirstName(rs.getString("firstname"));
+				user.setLastName(rs.getString("lastname"));
+				user.setEmail(rs.getString("email"));
+				user.setCpf(rs.getString("cpf"));
+				user.setRg(rs.getString("rg"));
+				user.setData_criacao(rs.getString("data_criacao"));
+			}else {
+				throw new ApiBadRequestException("Usuário não encontrado.");
+			}
+        	
+        	
             PreparedStatement preparedStatement = connectionCliente
-                    .prepareStatement("delete from cliente where email=?");
+                    .prepareStatement("delete from clientes where email=?");
             // Parameters start with 1
             preparedStatement.setString(1, email);
             preparedStatement.executeUpdate();
             
-            
         } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-        	try {
-				connectionCliente.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+        	throw new Exception(e);
+        }
     }
 
 }

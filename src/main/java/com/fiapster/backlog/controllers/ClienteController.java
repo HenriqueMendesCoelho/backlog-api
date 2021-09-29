@@ -1,6 +1,6 @@
 package com.fiapster.backlog.controllers;
 
-
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +23,7 @@ public class ClienteController {
 	Cliente user = new Cliente(0, null, null, null, null, null, null);
 	
 	@DeleteMapping ("/del")
-	public void deletarUser(@RequestParam String email) {
+	public void deletarUser(@RequestParam String email) throws Exception {
 		dao.deleteUser(email);
 	}
 	
@@ -33,7 +33,7 @@ public class ClienteController {
 	}
 	@PostMapping("/cadastro")
 	@ResponseBody
-	public String cadastroUsuario(@RequestBody Cliente cliente) throws Exception{
+	public String cadastroUsuario(@RequestBody Cliente cliente, HttpServletResponse response) throws Exception{
 		
 		cliente.setFirstName(cliente.getFirstName());
 		cliente.setLastName(cliente.getLastName());
@@ -44,7 +44,7 @@ public class ClienteController {
 		
 		System.out.println("cliente:"+cliente.getFirstName());
 		
-		return dao.CadastroCliente(cliente);
+		return dao.CadastroCliente(cliente, response);
 	}
 	
 	@GetMapping ("/busca/v1")

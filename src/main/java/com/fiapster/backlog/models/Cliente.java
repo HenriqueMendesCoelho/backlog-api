@@ -22,6 +22,11 @@ public class Cliente {
 		this.email = email;
 		this.data_criacao = data_criacao;
 	}
+	
+	public Cliente() {
+		
+	}
+	
 	public String getData_criacao() {
 		return data_criacao;
 	}
