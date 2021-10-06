@@ -29,22 +29,13 @@ public class ClienteController {
 	
 	@GetMapping ("/busca")
 	public Cliente buscaUsuarioPorEmail(@RequestBody Cliente user) throws Exception {
+		System.out.println("CPF: "+user.getCpf());
 		return dao.getUserByCPF(user.getCpf());
 	}
+	
 	@PostMapping("/cadastro")
-	@ResponseBody
-	public String cadastroUsuario(@RequestBody Cliente cliente, HttpServletResponse response) throws Exception{
-		
-		cliente.setFirstName(cliente.getFirstName());
-		cliente.setLastName(cliente.getLastName());
-		cliente.setEmail(cliente.getEmail());
-		cliente.setCpf(cliente.getCpf());
-		cliente.setRg(cliente.getRg());
-		cliente.setId(0);
-		
-		System.out.println("cliente:"+cliente.getFirstName());
-		
-		return dao.CadastroCliente(cliente, response);
+	public String cadastroUsuario(@RequestBody Cliente user) throws Exception{
+		return dao.CadastroCliente(user);
 	}
 	
 	@GetMapping ("/busca/v1")

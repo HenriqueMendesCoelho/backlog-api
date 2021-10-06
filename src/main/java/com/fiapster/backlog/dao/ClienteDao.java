@@ -21,14 +21,14 @@ public class ClienteDao {
 		connectionCliente = DbUtilCurso.getConnection();
 	}
 
-	public String CadastroCliente(Cliente user, HttpServletResponse response) throws ApiBadRequestException{
+	public String CadastroCliente(Cliente user) throws ApiBadRequestException{
 		try {
 			ObterDataEHora data = new ObterDataEHora();
 
-			if (user.getFirstName() == "" || user.getFirstName() == null) {
+			if (user.getFirstname() == "" || user.getFirstname() == null) {
 				throw new ApiBadRequestException("FirstName não pode ser nulo");
 			}
-			if (user.getLastName() == "" || user.getLastName() == null) {
+			if (user.getLastname() == "" || user.getLastname() == null) {
 				throw new ApiBadRequestException("LastName não pode ser nulo");
 			}
 			if (user.getEmail() == "" || user.getEmail() == null) {
@@ -44,8 +44,8 @@ public class ClienteDao {
 			PreparedStatement preparedStatement = connectionCliente.prepareStatement(
 					"insert into clientes(firstname,lastname,email,cpf,rg,data_criacao) values (?,?,?,?,?,?)");
 
-			preparedStatement.setString(1, user.getFirstName());
-			preparedStatement.setString(2, user.getLastName());
+			preparedStatement.setString(1, user.getFirstname());
+			preparedStatement.setString(2, user.getLastname());
 			preparedStatement.setString(3, user.getEmail());
 			preparedStatement.setString(4, user.getCpf());
 			preparedStatement.setString(5, user.getRg());
@@ -71,15 +71,15 @@ public class ClienteDao {
 
 			if (rs.next()) {
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstname"));
-				user.setLastName(rs.getString("lastname"));
+				user.setFirstname(cpf);
+				user.setLastname(rs.getString("lastname"));
 				user.setEmail(rs.getString("email"));
 				user.setCpf(rs.getString("cpf"));
 				user.setRg(rs.getString("rg"));
 				user.setData_criacao(rs.getString("data_criacao"));
 			}
 
-			if (user.getFirstName() == null || user.getFirstName() == "") {
+			if (user.getFirstname() == null || user.getFirstname() == "") {
 				throw new ApiBadRequestException("Usuário não encontrado.");
 			}
 			return user;
@@ -107,8 +107,8 @@ public class ClienteDao {
 			
 			if (rs.next()) {
 				user.setId(rs.getInt("id"));
-				user.setFirstName(rs.getString("firstname"));
-				user.setLastName(rs.getString("lastname"));
+				user.setFirstname(rs.getString("firstname"));
+				user.setLastname(rs.getString("lastname"));
 				user.setEmail(rs.getString("email"));
 				user.setCpf(rs.getString("cpf"));
 				user.setRg(rs.getString("rg"));
