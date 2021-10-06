@@ -18,6 +18,8 @@ public class ObterDataEHora {
 		
 		if(date.getMonthValue() < 10) {
 			mes = "0"+date.getMonthValue();
+		}else {
+			mes = Integer.toString(date.getMonthValue());
 		}
 		
 		if(c.get(Calendar.HOUR_OF_DAY) < 10) {

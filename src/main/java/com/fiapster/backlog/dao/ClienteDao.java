@@ -5,9 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.dao.DuplicateKeyException;
 
 import com.fiapster.backlog.exceptions.ApiBadRequestException;
+import com.fiapster.backlog.exceptions.ApiNotAcceptableException;
 import com.fiapster.backlog.methods.ObterDataEHora;
 import com.fiapster.backlog.models.Cliente;
 import com.fiapster.backlog.util.DbUtilCurso;
@@ -21,24 +22,24 @@ public class ClienteDao {
 		connectionCliente = DbUtilCurso.getConnection();
 	}
 
-	public String CadastroCliente(Cliente user) throws ApiBadRequestException{
+	public String CadastroCliente(Cliente user) throws Exception {
 		try {
 			ObterDataEHora data = new ObterDataEHora();
 
 			if (user.getFirstname() == "" || user.getFirstname() == null) {
-				throw new ApiBadRequestException("FirstName não pode ser nulo");
+				throw new ApiNotAcceptableException("Campo 'FirstName' não pode ser nulo");
 			}
 			if (user.getLastname() == "" || user.getLastname() == null) {
-				throw new ApiBadRequestException("LastName não pode ser nulo");
+				throw new ApiNotAcceptableException("Campo 'LastName' não pode ser nulo");
 			}
 			if (user.getEmail() == "" || user.getEmail() == null) {
-				throw new ApiBadRequestException("Email não pode ser nulo");
+				throw new ApiNotAcceptableException("Campo 'Email' não pode ser nulo");
 			}
 			if (user.getCpf() == "" || user.getCpf() == null) {
-				throw new ApiBadRequestException("CPG não pode ser nulo");
+				throw new ApiNotAcceptableException("Campo 'CPG' não pode ser nulo");
 			}
 			if (user.getRg() == "" || user.getRg() == null) {
-				throw new ApiBadRequestException("RG não pode ser nulo");
+				throw new ApiNotAcceptableException("Campo 'RG' não pode ser nulo");
 			}
 
 			PreparedStatement preparedStatement = connectionCliente.prepareStatement(
@@ -53,7 +54,7 @@ public class ClienteDao {
 			preparedStatement.executeUpdate();
 			return "Usuário cadastrado!";
 		} catch (SQLException e) {
-			throw new ApiBadRequestException(e.getMessage());
+			throw new DuplicateKeyException(e.getMessage());
 		}
 	}
 
@@ -61,7 +62,7 @@ public class ClienteDao {
 		try {
 			Cliente user = new Cliente();
 			if (cpf == null || cpf == "") {
-				throw new ApiBadRequestException("Email não pode ser nulo");
+				throw new ApiNotAcceptableException("Email não pode ser nulo");
 			}
 
 			PreparedStatement preparedStatement = connectionCliente
@@ -77,11 +78,10 @@ public class ClienteDao {
 				user.setCpf(rs.getString("cpf"));
 				user.setRg(rs.getString("rg"));
 				user.setData_criacao(rs.getString("data_criacao"));
-			}
-
-			if (user.getFirstname() == null || user.getFirstname() == "") {
+			}else {
 				throw new ApiBadRequestException("Usuário não encontrado.");
 			}
+			
 			return user;
 
 		} catch (SQLException e) {
@@ -95,7 +95,7 @@ public class ClienteDao {
         try {
         	
         	if(email == "" || email == null) {
-        		throw new ApiBadRequestException("E-mail não pode estar vazio.");
+        		throw new ApiNotAcceptableException("E-mail não pode estar vazio.");
         	}
         	
         	Cliente user = new Cliente();
