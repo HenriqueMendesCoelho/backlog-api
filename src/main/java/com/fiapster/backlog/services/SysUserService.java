@@ -17,6 +17,7 @@ import com.fiapster.backlog.dto.SysUserRankDTO;
 import com.fiapster.backlog.dto.SysUserUpdateDadosUserDTO;
 import com.fiapster.backlog.enums.Item;
 import com.fiapster.backlog.enums.Perfil;
+import com.fiapster.backlog.exceptions.ApiNotAcceptableException;
 import com.fiapster.backlog.methods.ObterDataEHora;
 import com.fiapster.backlog.models.ConfigSystem;
 import com.fiapster.backlog.models.EmailStatus;
@@ -302,18 +303,22 @@ public class SysUserService {
 	}
 
 	@CrossOrigin(origins = "*")
-	public String deletUser(String email, HttpServletRequest request) throws IllegalAccessException {
+	public String deletUser(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
 		SysUser user = repo.findByEmail(email);
 		
 		if(user != null) {
-			if (userAtual.getQtd_FLogin() < 10) {
-				repo.deleteById(user.getId());
-				return "Usuário deletado.";
-			} else {
-				throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			if(userAtual.getEmail() == user.getEmail()) {
+				throw new ApiNotAcceptableException("Usuário não pode deltar a própria conta.");
+			}else {
+				if (userAtual.getQtd_FLogin() < 10) {
+					repo.deleteById(user.getId());
+					return "Usuário deletado.";
+				} else {
+					throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+				}
 			}
 		}else {
 			throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
@@ -559,25 +564,30 @@ public class SysUserService {
 		}
 	}
 
-	public String bloqueiaOuDesbloqueiaContaADM(EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+	public String bloqueiaOuDesbloqueiaContaADM(EmailDTO email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
 		if(userAtual.getQtd_FLogin() < 10) {
 			SysUser user = repo.findByEmail(email.getEmail());
-			if (user != null) {
-				if (user.getQtd_FLogin() >= 10) {
-					user.setQtd_FLogin(5);
-					repo.saveAndFlush(user);
-					return "Conta do usuário desbloqueada.";
-				} else {
-					user.setQtd_FLogin(10);
-					repo.saveAndFlush(user);
-					return "Conta do usuário bloqueada.";
+				
+				if (user != null) {
+					if(userAtual.getEmail() == user.getEmail()) {
+						throw new ApiNotAcceptableException("Usuário não pode bloquear a própria conta.");
+					}else {
+						if (user.getQtd_FLogin() >= 10) {
+							user.setQtd_FLogin(5);
+							repo.saveAndFlush(user);
+							return "Conta do usuário desbloqueada.";
+						} else {
+							user.setQtd_FLogin(10);
+							repo.saveAndFlush(user);
+							return "Conta do usuário bloqueada.";
+						}
+					}
+				}else {
+					throw new IllegalAccessError("Usuário não encontrado");
 				}
-			}else {
-				throw new IllegalAccessError("Usuário não encontrado");
-			}
 		}else {
 			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
 		}

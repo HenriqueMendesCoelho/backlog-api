@@ -34,6 +34,7 @@ import com.fiapster.backlog.dto.SysUserRankDTO;
 import com.fiapster.backlog.dto.SysUserRemoveItemDTO;
 import com.fiapster.backlog.dto.SysUserUpdateDadosUserDTO;
 import com.fiapster.backlog.dto.ValidaLoginDTO;
+import com.fiapster.backlog.exceptions.ApiNotAcceptableException;
 import com.fiapster.backlog.models.SysUser;
 import com.fiapster.backlog.services.SysUserService;
 
@@ -62,7 +63,7 @@ public class UserController {
 	// Deleta o usuario
 	@DeleteMapping("/adm/del")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String deletarUser(@RequestBody SysUserCredenciaisDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String deletarUser(@RequestBody SysUserCredenciaisDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		
 		return service.deletUser(user.getEmail(), request);
 	}
@@ -142,7 +143,7 @@ public class UserController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/lock")
-	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {	
+	public String bloqueiaOuDesbloqueiaContaADM(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {	
 		return service.bloqueiaOuDesbloqueiaContaADM(email, request);
 	}
 	
