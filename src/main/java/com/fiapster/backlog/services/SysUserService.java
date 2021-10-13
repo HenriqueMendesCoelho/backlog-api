@@ -360,7 +360,7 @@ public class SysUserService {
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		if(userAtual.getQtd_FLogin() < 10) {
 			List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
-			for (SysUser SysUser : repo.findAllByOrderByPontosDesc()) {
+			for (SysUser SysUser : repo.findAll()) {
 				SysUser.setSenha("*****");
 				listaDeUsuario.add(SysUser);
 			}
