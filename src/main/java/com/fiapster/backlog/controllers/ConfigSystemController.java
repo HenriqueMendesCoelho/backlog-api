@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ import com.fiapster.backlog.dto.ConfigSystemNonAdminStoreDTO;
 import com.fiapster.backlog.models.ConfigSystem;
 import com.fiapster.backlog.services.ConfigSystemService;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/config")
 public class ConfigSystemController {

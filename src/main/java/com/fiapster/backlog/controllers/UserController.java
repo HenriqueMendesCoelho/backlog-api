@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,7 +37,7 @@ import com.fiapster.backlog.exceptions.ApiNotAcceptableException;
 import com.fiapster.backlog.models.SysUser;
 import com.fiapster.backlog.services.SysUserService;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -50,7 +49,7 @@ public class UserController {
 	
 	// Busca usuario pelo email
 	@GetMapping("/busca")
-	public SysUser buscaUsuarioPorEmail(HttpServletRequest request) throws IllegalAccessException {
+	public SysUser buscaUsuarioPorEmail(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.buscaUser(request);
 	}
 	
@@ -70,14 +69,14 @@ public class UserController {
 	
 	// Soma uma quantidade de pontos para o usuario
 	@PatchMapping("/p")
-	public String updatePontos(HttpServletRequest request) throws IllegalAccessException {
+	public String updatePontos(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.updatePontos(request);
 		return "Pontos atualizados.";
 	}
 	
 	// Soma uma quantidade de pontos para o usuario
 	@PatchMapping("/update")
-	public void updateDadosUser(@RequestBody SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public void updateDadosUser(@RequestBody SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.updateDadosUser(user, request);
 	}
 	
@@ -97,7 +96,7 @@ public class UserController {
 	
 	//Altera senha do usuário com JPA
 	@PatchMapping("/ns")
-	public String alteraSenha(@RequestBody SysUserAlteraSenhaDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String alteraSenha(@RequestBody SysUserAlteraSenhaDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.alteraSenha(request, user.getSenhaAtual(), user.getNovaSenha());
 		return "Senha alterada.";
 	}
@@ -105,7 +104,7 @@ public class UserController {
 	//Adiciona direito de acesso admin para usuário
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/add")
-	public String addAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String addAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.addAdmin(user.getEmail(), request);
 		return "Direito de acesso adicionado ao usuário.";
 	}
@@ -113,31 +112,31 @@ public class UserController {
 	//Remove direito de acesso admin para usuário
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/rmv")
-	public String removeAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String removeAdmin(@RequestBody SysUserPerfilDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.removeAdmin(user.getEmail(), request);
 		return "Direito de acesso removido do usuário.";
 	}
 	
 	@PatchMapping("/item/buy")
-	public String addItem(@RequestBody String item, HttpServletRequest request) throws IllegalAccessException {
+	public String addItem(@RequestBody String item, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.addItem(item, request);
 		return "Item adicionado.";
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/item/rmv")
-	public String rmvOuAddItem(@RequestBody SysUserRemoveItemDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String rmvOuAddItem(@RequestBody SysUserRemoveItemDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.rmvOuAddItem(user.getEmail(), user.getItem(), request);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/addcp")
-	public String addPontosECreditos(@RequestBody SysUserAddPontosECreditosDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public String addPontosECreditos(@RequestBody SysUserAddPontosECreditosDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.addPontosECreditosADM(user.getEmail(), user.getPontos(), user.getCreditos(), request);
 	}
 	
 	@PostMapping("/valid")
-	public void validaLogin(@RequestBody ValidaLoginDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public void validaLogin(@RequestBody ValidaLoginDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		service.valid(user.getSenha(), request);
 	}
 	
@@ -149,19 +148,19 @@ public class UserController {
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PatchMapping("/adm/srank")
-	public String apareNoRank(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+	public String apareNoRank(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.escondeOuMostraNoRank(email.getEmail(), request);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/adm/busca")
-	public SysUser buscaPorEmail(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException {
+	public SysUser buscaPorEmail(@RequestBody EmailDTO email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.buscaPorEmailADM(email.getEmail(), request);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/rank/adm")
-	public List<SysUser> buscaListaUsuarioADM(HttpServletRequest request) throws IllegalAccessException {
+	public List<SysUser> buscaListaUsuarioADM(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.getListaUSerADM(request);
 	}
 }

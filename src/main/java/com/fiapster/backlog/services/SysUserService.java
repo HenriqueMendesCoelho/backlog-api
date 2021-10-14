@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.fiapster.backlog.dto.EmailDTO;
 import com.fiapster.backlog.dto.SysUserRankDTO;
@@ -28,7 +27,6 @@ import com.fiapster.backlog.security.JWTUtil;
 import com.fiapster.backlog.security.SysUserSS;
 
 @Service
-@CrossOrigin(origins = "*")
 public class SysUserService {
 
 	@Autowired
@@ -106,7 +104,7 @@ public class SysUserService {
 		// emailCadastro(user.getEmail());
 	}
 
-	public void updateDadosUser(SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException {
+	public void updateDadosUser(SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userS = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
@@ -132,7 +130,7 @@ public class SysUserService {
 
 			repo.saveAndFlush(userS);
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
@@ -142,7 +140,7 @@ public class SysUserService {
 	}
 
 	public void alteraSenha(HttpServletRequest request, String senhaAtual, String novaSenha)
-			throws IllegalAccessException {
+			throws IllegalAccessException, ApiNotAcceptableException {
 
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
@@ -163,12 +161,12 @@ public class SysUserService {
 
 			repo.saveAndFlush(user);
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 		
 	}
 
-	public void addAdmin(String email, HttpServletRequest request) throws IllegalAccessException {
+	public void addAdmin(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
@@ -187,11 +185,11 @@ public class SysUserService {
 				repo.saveAndFlush(user);
 			}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
-	public void removeAdmin(String email, HttpServletRequest request) throws IllegalAccessException {
+	public void removeAdmin(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
@@ -209,11 +207,11 @@ public class SysUserService {
 				throw new IllegalAccessException("Usuário " + "'" + email + "'" + " não é administrador.");
 			}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
-	public SysUser buscaUser(HttpServletRequest request) throws IllegalAccessException {
+	public SysUser buscaUser(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
@@ -226,12 +224,12 @@ public class SysUserService {
 			user.setSenha("*****");
 			return user;
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 		
 	}
 
-	public void updatePontos(HttpServletRequest request) throws IllegalAccessException {
+	public void updatePontos(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		ObterDataEHora data = new ObterDataEHora();
 		ConfigSystem config = repoConfig.findById(1).get();
 		String header = request.getHeader("Authorization");
@@ -279,7 +277,7 @@ public class SysUserService {
 					user.setNivel(updateNivel(user.getPontos()));
 					repo.saveAndFlush(user);
 				}else {
-					throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+					throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 				}
 			}
 		} else {
@@ -302,7 +300,7 @@ public class SysUserService {
 		}
 	}
 
-	@CrossOrigin(origins = "*")
+	
 	public String deletUser(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
@@ -317,7 +315,7 @@ public class SysUserService {
 					repo.deleteById(user.getId());
 					return "Usuário deletado.";
 				} else {
-					throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+					throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 				}
 			}
 		}else {
@@ -355,7 +353,7 @@ public class SysUserService {
 		return listaDeUsuario;
 	}
 	
-	public List<SysUser> getListaUSerADM(HttpServletRequest request) throws IllegalAccessException {
+	public List<SysUser> getListaUSerADM(HttpServletRequest request) throws ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		if(userAtual.getQtd_FLogin() < 10) {
@@ -367,11 +365,11 @@ public class SysUserService {
 
 			return listaDeUsuario;
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
-	public void addItem(String item, HttpServletRequest request) throws IllegalAccessException {
+	public void addItem(String item, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		System.out.println("Créditos: " + user.getCreditos());
@@ -433,7 +431,7 @@ public class SysUserService {
 				}
 				repo.saveAndFlush(user);
 			}else {
-				throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+				throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 			}
 		} else {
 			throw new IllegalAccessException(
@@ -441,7 +439,7 @@ public class SysUserService {
 		}
 	}
 
-	public String rmvOuAddItem(String email, String item, HttpServletRequest request) throws IllegalAccessException {
+	public String rmvOuAddItem(String email, String item, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
@@ -517,11 +515,11 @@ public class SysUserService {
 			repo.saveAndFlush(user);
 			return retorno;
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
-	public String addPontosECreditosADM(String email, int valorPontos, int valorCreditos, HttpServletRequest request) throws IllegalAccessException {
+	public String addPontosECreditosADM(String email, int valorPontos, int valorCreditos, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		if(userAtual.getQtd_FLogin() < 10) {
@@ -536,7 +534,7 @@ public class SysUserService {
 				throw new IllegalAccessError("Usuário " + "'" + email + "'" + " não foi encontrado na base.");
 			}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
@@ -549,7 +547,7 @@ public class SysUserService {
 
 	}
 
-	public String valid(String senha, HttpServletRequest request) throws IllegalAccessException {
+	public String valid(String senha, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 
@@ -560,7 +558,7 @@ public class SysUserService {
 				throw new IllegalAccessException("Senha incorreta.");
 			}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 
@@ -589,11 +587,11 @@ public class SysUserService {
 					throw new IllegalAccessError("Usuário não encontrado");
 				}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 	
-	public String escondeOuMostraNoRank(String email, HttpServletRequest request) throws IllegalAccessException {
+	public String escondeOuMostraNoRank(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
@@ -615,11 +613,11 @@ public class SysUserService {
 				return "Usuário voltou a aparecer no Rank.";
 			}
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 	
-	public SysUser buscaPorEmailADM(String email, HttpServletRequest request) throws IllegalAccessException {
+	public SysUser buscaPorEmailADM(String email, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		
@@ -631,7 +629,7 @@ public class SysUserService {
 			user.setSenha("*****");
 			return user;
 		}else {
-			throw new IllegalAccessException("Conta bloqueada, contate um administrador.");
+			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
 }

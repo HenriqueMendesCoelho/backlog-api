@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 //import org.springframework.web.cors.CorsConfiguration;
 //import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,9 +31,7 @@ import com.fiapster.backlog.services.SmtpEmailService;
  */
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@CrossOrigin(origins = "*")
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -55,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable();//
+		http.cors().and().csrf().disable();
 		http.authorizeRequests()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.anyRequest().authenticated();
@@ -107,7 +104,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 				.allowedOrigins("*")
-				.allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS", "PUT");
+				.allowedMethods("GET", "PUT", "POST", "PATCH", "DELETE");
 				//.allowCredentials(true);
 				//registry.addMapping("/**").allowedMethods("*");
 				
