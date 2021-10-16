@@ -79,21 +79,19 @@
                                                                         style="font-size: 22px; font-family: Anonymous Pro ; color: #ffffff; line-height: 100%;">
                                                                         <em>
                                                                             <p>
-                                                                                    Recebemos um pedido para redefinir
-                                                                                    sua senha. Confirme o pedido de
-                                                                                    redefinição de senha para escolher
-                                                                                    uma nova senha. Caso não deseje
-                                                                                    mudar a sua senha, você pode ignorar
-                                                                                    este e-mail.
+                                                                                Recebemos um pedido para redefinir sua senha.
 
                                                                             <P>
-                                                                                Segue senha temporária:
-
+                                                                                Segue senha temporária de <b>uso único</b> para que possa acessar o sistema e alterar sua senha:
+                                                                            </P>
+                                                                            <P>
+                                                                                <p th:text="${nova_senha}"></p>
+                                                                            </P>
+                                                                            <P>
+                                                                                Caso não tenha sido você, entre em contato com o adminstrador do sistema.
                                                                             </P>
 
-                                                                            <p th:text="${'Senha:' + nova_senha}">
-
-                                                                            </p>
+                                                                            
 
 
                                                                             Lembrando que não utilizamos seus dados
@@ -115,7 +113,7 @@
                                                                             <button
                                                                                 style="background: rgb(255, 255, 255); border-radius: 6px; padding: 20px 35px; cursor: pointer; color: rgb(0, 0, 0); border: none; font-size: 16px;">
 
-                                                                                Acesse
+                                                                                Acesse e confira
 
                                                                             </button>
                                                                         </a>
