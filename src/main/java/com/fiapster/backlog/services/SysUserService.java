@@ -98,7 +98,7 @@ public class SysUserService {
 		if (user.getSenha() == "" || user.getSenha() == null) {
 			throw new IllegalAccessException("Senha do usuário não pode ser nulo.");
 		}
-		System.out.println(user.getSenha());
+		
 		user.setSenha(pe.encode(user.getSenha()));
 		repo.save(user);
 		// emailCadastro(user.getEmail());
