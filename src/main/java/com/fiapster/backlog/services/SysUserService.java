@@ -63,7 +63,7 @@ public class SysUserService {
 			root.setAparecerNoRank(false);
 			root.setNome("Root");
 			root.setCargo("Root");
-			root.setEmail("root@root");
+			root.setEmail("root@root.com");
 			root.setSenha(pe.encode("root"));
 			root.addPerfil(Perfil.ADMIN);
 			repo.save(root);
