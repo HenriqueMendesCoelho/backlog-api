@@ -61,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	/*
-	 * 
 	 * Apenas requests padrões são aceitas GET,POST 
 	 *
 	@Bean
