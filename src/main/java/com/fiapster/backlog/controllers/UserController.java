@@ -1,6 +1,7 @@
 package com.fiapster.backlog.controllers;
 
 
+
 /**
  * 
  * @author Henrique
@@ -162,5 +163,10 @@ public class UserController {
 	@GetMapping("/rank/adm")
 	public List<SysUser> buscaListaUsuarioADM(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.getListaUSerADM(request);
+	}
+	
+	@GetMapping("/teste/teste")
+	public void teste() {
+		service.getPerfisUser("henriquemendescoelho@gmail.com");
 	}
 }

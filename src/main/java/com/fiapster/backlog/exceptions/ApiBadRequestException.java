@@ -14,6 +14,4 @@ public class ApiBadRequestException extends ReflectiveOperationException{
 	public ApiBadRequestException(Throwable cause) {
 		super(cause);
 	}
-	
-	
 }

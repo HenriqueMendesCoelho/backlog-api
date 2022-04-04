@@ -24,7 +24,7 @@ public class AuthService {
 	
 	private Random rand = new Random();
 	
-	public void geraNovaSenha(String email) throws Exception{
+	public void geraNovaSenha(String email) throws Exception {
 		
 		if(email == null || email == "") {
 			throw new IllegalArgumentException("Email não pode ser nulo.");

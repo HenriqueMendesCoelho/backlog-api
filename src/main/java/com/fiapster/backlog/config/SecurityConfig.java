@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			"/api/user/rank",
 			"/api/user/cadastro",
 			"/api/config/badge",
-			"/api/auth/forgot"
+			"/api/auth/forgot",
+			"/api/user/teste/teste",
 	};
 	
 	@Override

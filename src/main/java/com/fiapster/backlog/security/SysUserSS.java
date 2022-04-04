@@ -16,7 +16,7 @@ public class SysUserSS implements UserDetails{
 	private Integer userid;
 	private String email;
 	private String senha;
-	private boolean Stemp;
+	private boolean stemp;
 	private int credTmpUses;
 	private int Qtd_FLogin;
 	private Collection<? extends GrantedAuthority> authorities;
@@ -25,12 +25,12 @@ public class SysUserSS implements UserDetails{
 		
 	}
 	
-	public SysUserSS(Integer userid, String email, String senha, boolean Stemp, int credTmpUses, int Qtd_FLogin, Set<Perfil> perfis) {
+	public SysUserSS(Integer userid, String email, String senha, boolean stemp, int credTmpUses, int Qtd_FLogin, Set<Perfil> perfis) {
 		super();
 		this.userid = userid;
 		this.email = email;
 		this.senha = senha;
-		this.Stemp = Stemp;
+		this.stemp = stemp;
 		this.credTmpUses = credTmpUses;
 		this.Qtd_FLogin = Qtd_FLogin;
 		this.authorities = perfis.stream().map(i -> new SimpleGrantedAuthority(i.getDescricao())).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class SysUserSS implements UserDetails{
 	@Override
 	public boolean isCredentialsNonExpired() {
 
-		if(Stemp) {
+		if(stemp) {
 			if(credTmpUses >= 1) {
 				return false;
 			}else {
@@ -91,7 +91,7 @@ public class SysUserSS implements UserDetails{
 	}
 
 	public boolean isStemp() {
-		return Stemp;
+		return stemp;
 	}
 
 	public int getQtd_FLogin() {

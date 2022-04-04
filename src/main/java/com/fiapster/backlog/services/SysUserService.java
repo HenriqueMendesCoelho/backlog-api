@@ -1,7 +1,9 @@
 package com.fiapster.backlog.services;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -632,4 +634,26 @@ public class SysUserService {
 			throw new ApiNotAcceptableException("Conta bloqueada, contate um administrador.");
 		}
 	}
+	
+	public void getPerfisUser(String email){
+		SysUser user = repo.findByEmail("henriquemendescoelho@gmail.com");
+		
+		Set<Perfil> set = user.getPerfis();
+		Iterator<Perfil> iterator = set.iterator();
+		
+		//Ideia para validar direito de acesso do usuário
+		while(iterator.hasNext()) {
+			
+			System.out.println(iterator.next().getCod());
+			/*
+			if(iterator.next().name() == "USUARIO") {
+				System.out.println("True");
+			}else {
+				System.err.println("False");
+			}*/
+		}
+		
+		
+	}
+	
 }
