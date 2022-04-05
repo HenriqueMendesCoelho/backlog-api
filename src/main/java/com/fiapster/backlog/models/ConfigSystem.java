@@ -100,14 +100,13 @@ public class ConfigSystem implements Serializable{
 		
 	}
 
-	public ConfigSystem(Integer id, int preco_pontual, int preco_coroa, int preco_superLimpo, int preco_persistente,
+	public ConfigSystem(int preco_pontual, int preco_coroa, int preco_superLimpo, int preco_persistente,
 			int preco_cruz, int preco_alcool, int intervaloReset, int intervaloMax, int intervaloIntermediario,
 			int intervaloMin, int pontosPrimeiraExec, int pontosReset, int pontosIntervalMax, int pontosIntervalInter,
 			int pontosIntervalMin, int creditosPrimeiraExec, int creditosReset, int creditosIntervalMax,
 			int creditosIntervalInter, int creditosIntervalMin, int nivelBadge1, int nivelBadge2, int nivelBadge3,
 			int nivelBadge4, int pontosNivel, String ultimoEditor, String ultimaAlt) {
 		super();
-		this.id = id;
 		this.preco_pontual = preco_pontual;
 		this.preco_coroa = preco_coroa;
 		this.preco_superLimpo = preco_superLimpo;

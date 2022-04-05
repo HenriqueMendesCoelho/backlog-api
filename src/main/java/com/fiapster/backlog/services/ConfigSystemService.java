@@ -1,6 +1,7 @@
 package com.fiapster.backlog.services;
 
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,18 @@ public class ConfigSystemService {
 	
 	@Autowired
 	private JWTUtil jwtutil;
+	
+	@PostConstruct
+	public void createDefaultSettingsConfig() {
+		System.out.println("Verificando se existem configuracoes padroes");
+		if(repo.count() < 1) {
+			System.out.println("Criando configuracao padrao");
+			ConfigSystem config = new ConfigSystem(500, 2500, 500, 500, 1500, 500, 720, 60, 35, 2, 10, 10, 0, 5, 10, 10, 10, 0, 5, 10, 25, 50, 80, 100, 100, "System", d.obterDataEHora());		
+			repo.save(config);
+			return;
+		}
+		System.out.println("Configuracao padrao validada com sucesso");
+	}
 	
 	
 	public void createOrUpdateConfig(ConfigSystem configN, HttpServletRequest request) throws Exception{
