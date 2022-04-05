@@ -46,4 +46,9 @@ public class ConfigSystemController {
 		return service.getConfigNonAdminBadge();
 	}
 	
+	@PostMapping("/teste")
+	public void testaConsulta() {
+		service.testaConsulta(100);
+	}
+	
 }

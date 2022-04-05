@@ -176,13 +176,13 @@ public class ConfigSystemService {
 				if(configN.getPontosNivel() <= 0) {
 					throw new IllegalArgumentException("Pontos para passar de nível não pode ser menor ou igual a 0.");
 				} else if(configN.getPontosNivel() != configA.getPontosNivel()) {
-					repo.reprocessarNivel(configN.getPontosNivel());
+					repo.updateReprocessarNivel(configN.getPontosNivel());
 				}
 			}else {
 				if(configN.getPontosNivel() <= 0) {
 					throw new IllegalArgumentException("Pontos para passar de nível não pode ser menor ou igual a 0.");
 				}
-				repo.reprocessarNivel(configN.getPontosNivel());
+				repo.updateReprocessarNivel(configN.getPontosNivel());
 			}
 			configN.setUltimoEditor(user.getNome()+"; "+user.getEmail());
 			
@@ -193,57 +193,57 @@ public class ConfigSystemService {
 				
 				//Validação para envio do email de nova configuração
 				if(configN.getCreditosIntervalInter() != configA.getCreditosIntervalInter()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getCreditosIntervalMax() != configA.getCreditosIntervalMax()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getCreditosIntervalMin() != configA.getCreditosIntervalMin()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getCreditosPrimeiraExec() != configA.getCreditosPrimeiraExec()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getCreditosReset() != configA.getCreditosReset()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosIntervalInter() != configA.getPontosIntervalInter()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosIntervalMax() != configA.getPontosIntervalMax()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosIntervalMin() != configA.getPontosIntervalMin()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosPrimeiraExec() != configA.getPontosPrimeiraExec()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosReset() != configA.getPontosReset()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getIntervaloIntermediario() != configA.getIntervaloIntermediario()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getIntervaloMax() != configA.getIntervaloMax()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getIntervaloMin() != configA.getIntervaloMin()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getIntervaloMin() != configA.getIntervaloMin()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getIntervaloReset() != configA.getIntervaloReset()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_alcool() != configA.getPreco_alcool()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_coroa() != configA.getPreco_coroa()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_cruz() != configA.getPreco_cruz()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_persistente() != configA.getPreco_persistente()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_pontual() != configA.getPreco_pontual()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPreco_superLimpo() != configA.getPreco_superLimpo()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getNivelBadge1() != configA.getNivelBadge1()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getNivelBadge2() != configA.getNivelBadge2()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getNivelBadge3() != configA.getNivelBadge3()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getNivelBadge4() != configA.getNivelBadge4()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}else if(configN.getPontosNivel() != configA.getPontosNivel()) {
-					repoEmail.enviaEmailConfig(0);
+					repoEmail.enviaEmailConfig(false);
 				}
 				
 				configA.setCreditosIntervalInter(configN.getCreditosIntervalInter());
@@ -317,9 +317,9 @@ public class ConfigSystemService {
 		}
 	}
 	
-public ConfigSystemNonAdminBadgeDTO getConfigNonAdminBadge() throws Exception {
+	public ConfigSystemNonAdminBadgeDTO getConfigNonAdminBadge() throws Exception {
 		
-	ConfigSystemNonAdminBadgeDTO configNonADM = new ConfigSystemNonAdminBadgeDTO();
+		ConfigSystemNonAdminBadgeDTO configNonADM = new ConfigSystemNonAdminBadgeDTO();
 		
 		if(repo.count() == 0) {
 			throw new IllegalAccessException("Não existe configurações na base de dados.");
@@ -335,4 +335,7 @@ public ConfigSystemNonAdminBadgeDTO getConfigNonAdminBadge() throws Exception {
 		}
 	}
 
+	public void testaConsulta(int nivel) {
+		repo.updateReprocessarNivel(nivel);
+	}
 }
