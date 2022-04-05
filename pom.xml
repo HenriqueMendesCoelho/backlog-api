@@ -11,7 +11,7 @@
 	<groupId>com.fiapster</groupId>
 	<artifactId>backlog</artifactId>
 	<version>1.0.0</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>backlog</name>
 	<description>Projeto SpringBoot Backlog-API</description>
 	<properties>
