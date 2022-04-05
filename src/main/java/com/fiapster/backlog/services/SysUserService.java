@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.fiapster.backlog.dto.EmailDTO;
@@ -29,6 +30,7 @@ import com.fiapster.backlog.security.JWTUtil;
 import com.fiapster.backlog.security.SysUserSS;
 
 @Service
+@Component
 public class SysUserService {
 
 	@Autowired
