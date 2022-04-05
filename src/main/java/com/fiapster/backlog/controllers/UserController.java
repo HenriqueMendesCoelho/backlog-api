@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fiapster.backlog.dao.SysUserDao;
 import com.fiapster.backlog.dto.EmailDTO;
 import com.fiapster.backlog.dto.SysUserAddPontosECreditosDTO;
 import com.fiapster.backlog.dto.SysUserAlteraSenhaDTO;
@@ -42,7 +41,6 @@ import com.fiapster.backlog.services.SysUserService;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-	SysUserDao dao = new SysUserDao();
 	SysUser user = new SysUser();
 	
 	@Autowired

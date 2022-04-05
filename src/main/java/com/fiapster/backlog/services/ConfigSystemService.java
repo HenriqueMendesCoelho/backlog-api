@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.fiapster.backlog.dao.ConfigSystemDAO;
-import com.fiapster.backlog.dao.EmailDAO;
 import com.fiapster.backlog.dto.ConfigSystemNonAdminBadgeDTO;
 import com.fiapster.backlog.dto.ConfigSystemNonAdminStoreDTO;
 import com.fiapster.backlog.methods.ObterDataEHora;
 import com.fiapster.backlog.models.ConfigSystem;
 import com.fiapster.backlog.models.SysUser;
 import com.fiapster.backlog.repositories.ConfigSystemRepository;
+import com.fiapster.backlog.repositories.EmailStatusRepository;
 import com.fiapster.backlog.repositories.SysUserRepository;
 import com.fiapster.backlog.security.JWTUtil;
 
@@ -24,6 +23,9 @@ public class ConfigSystemService {
 	
 	@Autowired
 	ConfigSystemRepository repo;
+	
+	@Autowired
+	EmailStatusRepository repoEmail;
 	
 	@Autowired
 	SysUserRepository repoUser;
@@ -46,9 +48,6 @@ public class ConfigSystemService {
 			}else {
 				config_exist = true;
 			}
-			
-			ConfigSystemDAO dao = new ConfigSystemDAO();
-			EmailDAO daoEmail = new EmailDAO();
 			
 			//Validação de intervalos
 			if(configN.getIntervaloReset() <= 0) {
@@ -177,13 +176,13 @@ public class ConfigSystemService {
 				if(configN.getPontosNivel() <= 0) {
 					throw new IllegalArgumentException("Pontos para passar de nível não pode ser menor ou igual a 0.");
 				} else if(configN.getPontosNivel() != configA.getPontosNivel()) {
-					dao.reprocessarNivel(configN.getPontosNivel());
+					repo.reprocessarNivel(configN.getPontosNivel());
 				}
 			}else {
 				if(configN.getPontosNivel() <= 0) {
 					throw new IllegalArgumentException("Pontos para passar de nível não pode ser menor ou igual a 0.");
 				}
-				dao.reprocessarNivel(configN.getPontosNivel());
+				repo.reprocessarNivel(configN.getPontosNivel());
 			}
 			configN.setUltimoEditor(user.getNome()+"; "+user.getEmail());
 			
@@ -194,57 +193,57 @@ public class ConfigSystemService {
 				
 				//Validação para envio do email de nova configuração
 				if(configN.getCreditosIntervalInter() != configA.getCreditosIntervalInter()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getCreditosIntervalMax() != configA.getCreditosIntervalMax()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getCreditosIntervalMin() != configA.getCreditosIntervalMin()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getCreditosPrimeiraExec() != configA.getCreditosPrimeiraExec()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getCreditosReset() != configA.getCreditosReset()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosIntervalInter() != configA.getPontosIntervalInter()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosIntervalMax() != configA.getPontosIntervalMax()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosIntervalMin() != configA.getPontosIntervalMin()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosPrimeiraExec() != configA.getPontosPrimeiraExec()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosReset() != configA.getPontosReset()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getIntervaloIntermediario() != configA.getIntervaloIntermediario()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getIntervaloMax() != configA.getIntervaloMax()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getIntervaloMin() != configA.getIntervaloMin()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getIntervaloMin() != configA.getIntervaloMin()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getIntervaloReset() != configA.getIntervaloReset()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_alcool() != configA.getPreco_alcool()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_coroa() != configA.getPreco_coroa()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_cruz() != configA.getPreco_cruz()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_persistente() != configA.getPreco_persistente()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_pontual() != configA.getPreco_pontual()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPreco_superLimpo() != configA.getPreco_superLimpo()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getNivelBadge1() != configA.getNivelBadge1()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getNivelBadge2() != configA.getNivelBadge2()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getNivelBadge3() != configA.getNivelBadge3()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getNivelBadge4() != configA.getNivelBadge4()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}else if(configN.getPontosNivel() != configA.getPontosNivel()) {
-					daoEmail.enviaEmailConfig();
+					repoEmail.enviaEmailConfig(0);
 				}
 				
 				configA.setCreditosIntervalInter(configN.getCreditosIntervalInter());
