@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class DbUtilBacklog {
 	
-private static Connection connection = null;
+	private static Connection connection = null;
 	
 	public static Connection getConnection() {
 		if (connection != null)
@@ -21,10 +21,8 @@ private static Connection connection = null;
                 @SuppressWarnings("unused")
 				Properties prop = new Properties();
                 
-                String user = "root";
-                String pass = "8u3T7&HQ$5o^x##";
                 Class.forName("com.mysql.cj.jdbc.Driver");
-                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/backlog", user, pass);
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/backlog", "root", "8u3T7&HQ$5o^x##");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (SQLException e) {
@@ -33,5 +31,4 @@ private static Connection connection = null;
             return connection;
         }
 	}
-
 }
