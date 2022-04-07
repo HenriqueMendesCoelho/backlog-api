@@ -7,5 +7,5 @@ package com.fiapster.backlog.test;
  */
 
 public class ClasseDeTeste {
-
+	
 }
