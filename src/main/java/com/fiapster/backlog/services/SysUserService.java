@@ -360,11 +360,15 @@ public class SysUserService {
 	public List<SysUser> getListaUSerADM(HttpServletRequest request) throws ApiNotAcceptableException {
 		String header = request.getHeader("Authorization");
 		SysUser userAtual = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+		
 		if(userAtual.getQtd_FLogin() < 10) {
-			List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
-			for (SysUser SysUser : repo.findAll()) {
-				SysUser.setSenha("*****");
-				listaDeUsuario.add(SysUser);
+			
+			//List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
+			List<SysUser> listaDeUsuario = repo.findAll();
+			for (SysUser sysUser : listaDeUsuario) {
+				
+				sysUser.setSenha("*****");
+				//listaDeUsuario.add(sysUser);
 			}
 
 			return listaDeUsuario;
