@@ -11,10 +11,13 @@ public class ObterDataEHora {
 	public String obterDataEHora(){
 		LocalDate date = LocalDate.now();
 		Calendar c = Calendar.getInstance();
+		String dia = (date.getDayOfMonth() < 10) ? "0"+date.getDayOfMonth() : Integer.toString(date.getDayOfMonth());
 		String mes = "";
 		String hours = "";
 		String minutes = "";
 		String seconds = "";
+		
+		if(date.getDayOfMonth() < 10)
 		
 		if(date.getMonthValue() < 10) {
 			mes = "0"+date.getMonthValue();
@@ -43,7 +46,7 @@ public class ObterDataEHora {
 		}
 		
 		
-		String data = date.getDayOfMonth()+"-"+mes+"-"+date.getYear();
+		String data = dia+"-"+mes+"-"+date.getYear();
 		
 		return data + "|" + hours + ":" + minutes + ":" + seconds;
 	}
