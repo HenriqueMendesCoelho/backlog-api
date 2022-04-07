@@ -29,7 +29,7 @@ public class ScheduledJobs {
 	@Async
 	@Scheduled(fixedDelayString = "PT5M")
 	void enviaEmailBoasVindas() {
-		ArrayList<SysUser> users = (ArrayList<SysUser>) serviceU.getListaUSer();
+		ArrayList<SysUser> users = (ArrayList<SysUser>) serviceU.getListaUser();
 		
 		for (int i = 0; i < users.size(); i++) {
 			if(users.get(i) != null) {
@@ -44,7 +44,7 @@ public class ScheduledJobs {
 	@Async
 	@Scheduled(cron = "0 0 17 * * *")
 	void enviaEmailNovaConfig() {
-		ArrayList<SysUser> users = (ArrayList<SysUser>) serviceU.getListaUSer();
+		ArrayList<SysUser> users = (ArrayList<SysUser>) serviceU.getListaUser();
 		ConfigSystem config = repoConfig.findById(1).get();
 		
 		if(config != null) {

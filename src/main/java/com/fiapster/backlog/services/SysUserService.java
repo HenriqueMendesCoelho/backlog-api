@@ -348,7 +348,7 @@ public class SysUserService {
 		return listaDeUsuarioFinal;
 	}
 
-	public List<SysUser> getListaUSer() {
+	public List<SysUser> getListaUser() {
 		List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
 		for (SysUser SysUser : repo.findAllByOrderByPontosDesc()) {
 			listaDeUsuario.add(SysUser);
