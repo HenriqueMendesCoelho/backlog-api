@@ -363,12 +363,10 @@ public class SysUserService {
 		
 		if(userAtual.getQtd_FLogin() < 10) {
 			
-			//List<SysUser> listaDeUsuario = new ArrayList<SysUser>();
-			List<SysUser> listaDeUsuario = repo.findAll();
+			List<SysUser> listaDeUsuario = repo.findAllByOrderByIdAsc();
 			for (SysUser sysUser : listaDeUsuario) {
 				
 				sysUser.setSenha("*****");
-				//listaDeUsuario.add(sysUser);
 			}
 
 			return listaDeUsuario;

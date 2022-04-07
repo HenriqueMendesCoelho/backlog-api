@@ -18,5 +18,8 @@ public interface SysUserRepository extends JpaRepository<SysUser, Integer> {
 	
 	@Transactional(readOnly = true)
 	List<SysUser> findAllByOrderByPontosDesc();
+	
+	@Transactional(readOnly = true)
+	List<SysUser> findAllByOrderByIdAsc();
 
 }
