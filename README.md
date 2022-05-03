@@ -5,5 +5,5 @@
 mvn install
 ```
 
-### Acess
+### Go to the website
 See [here](https://backlog-web.vercel.app/).
