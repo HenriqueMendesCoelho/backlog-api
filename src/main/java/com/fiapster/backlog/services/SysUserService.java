@@ -477,7 +477,7 @@ public class SysUserService {
 				}
 				break;
 			case "CRUZ":
-				if (!user.getItens().toString().contains("BORRIFADOR")) {
+				if (!user.getItens().toString().contains("CRUZ")) {
 					user.addItem(Item.CRUZ);
 					retorno= "Item adicionado.";
 				}else {
