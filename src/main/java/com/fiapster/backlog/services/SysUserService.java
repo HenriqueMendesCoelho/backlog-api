@@ -105,7 +105,6 @@ public class SysUserService {
 		
 		user.setSenha(pe.encode(user.getSenha()));
 		repo.save(user);
-		// emailCadastro(user.getEmail());
 	}
 
 	public void updateDadosUser(SysUserUpdateDadosUserDTO user, HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
@@ -379,7 +378,7 @@ public class SysUserService {
 		String header = request.getHeader("Authorization");
 		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
 		System.out.println("Créditos: " + user.getCreditos());
-		ConfigSystem config = repoConfig.getById(1);
+		ConfigSystem config = repoConfig.getReferenceById(1);
 
 		if (config != null) {
 			if(user.getQtd_FLogin() < 10) {

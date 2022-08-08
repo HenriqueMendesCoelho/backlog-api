@@ -21,11 +21,11 @@ public class SysUserDetailsServiceImpl implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		SysUser user = repo.findByEmail(email);
+		
 		if(user == null) {
 			throw new UsernameNotFoundException(email);
 		}
 		
 		return new SysUserSS(user.getId(), user.getEmail(), user.getSenha(), user.isStemp(), user.getCredTmpUses(), user.getQtd_FLogin(), user.getPerfis());
 	}
-
 }
