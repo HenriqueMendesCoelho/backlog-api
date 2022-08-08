@@ -162,9 +162,4 @@ public class UserController {
 	public List<SysUser> buscaListaUsuarioADM(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
 		return service.getListaUSerADM(request);
 	}
-	
-	@GetMapping("/teste/teste")
-	public void teste() {
-		service.getPerfisUser("henriquemendescoelho@gmail.com");
-	}
 }

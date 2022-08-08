@@ -185,7 +185,7 @@ public class ConfigSystemService {
 			
 			//Validação de reprocessamento dos pontos
 			if(config_exist) {
-				ConfigSystem configA = repo.getById(1);
+				ConfigSystem configA = repo.getReferenceById(1);
 				if(configN.getPontosNivel() <= 0) {
 					throw new IllegalArgumentException("Pontos para passar de nível não pode ser menor ou igual a 0.");
 				} else if(configN.getPontosNivel() != configA.getPontosNivel()) {
@@ -202,7 +202,7 @@ public class ConfigSystemService {
 			configN.setUltimaAlt(d.obterDataEHora());
 			
 			if(config_exist) {
-				ConfigSystem configA = repo.getById(1);
+				ConfigSystem configA = repo.getReferenceById(1);
 				
 				//Validação para envio do email de nova configuração
 				if(configN.getCreditosIntervalInter() != configA.getCreditosIntervalInter()) {
@@ -261,24 +261,24 @@ public class ConfigSystemService {
 				
 				configA.setCreditosIntervalInter(configN.getCreditosIntervalInter());
 				configA.setCreditosIntervalMax(configN.getCreditosIntervalMax());
-				configA.setCreditosIntervalMin(configN.getCreditosIntervalMin());//
-				configA.setCreditosPrimeiraExec(configN.getCreditosPrimeiraExec());//
-				configA.setCreditosReset(configN.getCreditosReset());//
-				configA.setPontosIntervalInter(configN.getPontosIntervalInter());//
-				configA.setPontosIntervalMax(configN.getPontosIntervalMax());//
-				configA.setPontosIntervalMin(configN.getPontosIntervalMin());//
-				configA.setPontosPrimeiraExec(configN.getPontosPrimeiraExec());//
-				configA.setPontosReset(configN.getPontosReset());//
-				configA.setIntervaloIntermediario(configN.getIntervaloIntermediario());//
-				configA.setIntervaloMax(configN.getIntervaloMax());//
-				configA.setIntervaloMin(configN.getIntervaloMin());//
-				configA.setIntervaloReset(configN.getIntervaloReset());//
-				configA.setPreco_alcool(configN.getPreco_alcool());//
-				configA.setPreco_coroa(configN.getPreco_coroa());//
-				configA.setPreco_cruz(configN.getPreco_cruz());//
-				configA.setPreco_persistente(configN.getPreco_persistente());//
-				configA.setPreco_pontual(configN.getPreco_pontual());//
-				configA.setPreco_superLimpo(configN.getPreco_superLimpo());//
+				configA.setCreditosIntervalMin(configN.getCreditosIntervalMin());
+				configA.setCreditosPrimeiraExec(configN.getCreditosPrimeiraExec());
+				configA.setCreditosReset(configN.getCreditosReset());
+				configA.setPontosIntervalInter(configN.getPontosIntervalInter());
+				configA.setPontosIntervalMax(configN.getPontosIntervalMax());
+				configA.setPontosIntervalMin(configN.getPontosIntervalMin());
+				configA.setPontosPrimeiraExec(configN.getPontosPrimeiraExec());
+				configA.setPontosReset(configN.getPontosReset());
+				configA.setIntervaloIntermediario(configN.getIntervaloIntermediario());
+				configA.setIntervaloMax(configN.getIntervaloMax());
+				configA.setIntervaloMin(configN.getIntervaloMin());
+				configA.setIntervaloReset(configN.getIntervaloReset());
+				configA.setPreco_alcool(configN.getPreco_alcool());
+				configA.setPreco_coroa(configN.getPreco_coroa());
+				configA.setPreco_cruz(configN.getPreco_cruz());
+				configA.setPreco_persistente(configN.getPreco_persistente());
+				configA.setPreco_pontual(configN.getPreco_pontual());
+				configA.setPreco_superLimpo(configN.getPreco_superLimpo());
 				configA.setNivelBadge1(configN.getNivelBadge1());
 				configA.setNivelBadge2(configN.getNivelBadge2());
 				configA.setNivelBadge3(configN.getNivelBadge3());
