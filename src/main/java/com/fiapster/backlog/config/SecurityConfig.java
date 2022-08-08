@@ -40,10 +40,6 @@ public class SecurityConfig {
 	private AuthenticationConfiguration authenticationConfiguration;
 	
 	@Autowired
-	BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	
-	@Autowired
 	JWTUtil jwtUtil;
 	
 	private static final String[] PUBLIC_MATCHERS = {
