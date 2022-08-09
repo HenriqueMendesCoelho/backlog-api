@@ -3,13 +3,14 @@ package com.fiapster.backlog.security;
 import java.security.Key;
 import java.util.Date;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JWTUtil {
@@ -17,13 +18,18 @@ public class JWTUtil {
 	@Value("${jwt.expiration}")
 	public long expiration;
 	
-	private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+	@Value("${jwt.secret}")
+	public String secret;
+	
+	private Key getKey() {
+		return new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
+	}
 	
 	public String generateToken(String username) {
 		return Jwts.builder()
 				.setSubject(username)
 				.setExpiration(new Date(System.currentTimeMillis()+expiration))
-				.signWith(key)
+				.signWith(getKey())
 				.setAudience("BackLog System users")
 				.compact();
 	}
@@ -51,7 +57,7 @@ public class JWTUtil {
 	}
 	private Claims getClaims(String token) {
 		try {
-			return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+			return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
 		} catch (Exception e) {
 			return null;
 		}
