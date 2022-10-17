@@ -1,0 +1,12 @@
+version: '2'
+services:
+    backlog:
+        environment:
+            SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+        build:
+            context: .
+            args:
+               DB_SB_PW: ${DB_SB_PW}
+               BACKLOG_DB_URL: ${BACKLOG_DB_URL}
+               JWT_SECRET: ${JWT_SECRET}
+            dockerfile: Dockerfile
