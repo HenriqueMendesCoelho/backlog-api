@@ -1,4 +1,4 @@
-FROM arm64v8/maven:3.8-eclipse-temurin-8
+FROM maven:3.8-eclipse-temurin-8
 
 ARG BACKLOG_DB_URL
 ARG DB_SB_PW
@@ -17,6 +17,6 @@ EXPOSE 8080
 COPY ./ ./
 RUN mvn -f ./pom.xml clean package
 
-ADD target/*.jar backlog.jar
+ADD target/*.jar /backlog.jar
 
 ENTRYPOINT [ "java", "-jar", "backlog.jar" ]
