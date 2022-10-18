@@ -1,4 +1,4 @@
-FROM arm64v8/maven:3.8.6-eclipse-temurin-17-alpine
+FROM maven:3.8.6-eclipse-temurin-17-alpine
 
 ARG BACKLOG_DB_URL
 ARG DB_PASS
@@ -10,12 +10,10 @@ ENV DB_PASS=${DB_PASS}
 ENV DB_USER=${DB_USER}
 ENV JWT_SECRET=${JWT_SECRET}
 
-COPY ./ ./
+COPY . .
 
-RUN mvn clean install
-
-COPY target/backlog.jar backlog.jar
+RUN mvn clean package
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "backlog.jar"]
+ENTRYPOINT ["java", "-jar", "target/backlog.jar"]
