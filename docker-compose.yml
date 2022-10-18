@@ -7,6 +7,7 @@ services:
             context: .
             args:
                DB_SB_PW: ${DB_SB_PW}
+               DB_SB_PW: ${DB_SB_USR}
                BACKLOG_DB_URL: ${BACKLOG_DB_URL}
                JWT_SECRET: ${JWT_SECRET}
             dockerfile: Dockerfile
