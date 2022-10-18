@@ -10,6 +10,8 @@ ENV DB_PASS=${DB_PASS}
 ENV DB_USER=${DB_USER}
 ENV JWT_SECRET=${JWT_SECRET}
 
+RUN printenv
+
 COPY . .
 
 RUN mvn clean package
