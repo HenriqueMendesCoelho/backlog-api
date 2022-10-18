@@ -1,4 +1,4 @@
-FROM maven:3.8-eclipse-temurin-8-alpine
+FROM arm64v8/maven:3.8-eclipse-temurin-8
 
 ARG BACKLOG_DB_URL
 ARG DB_SB_PW
