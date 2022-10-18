@@ -17,7 +17,8 @@ EXPOSE 8080
 COPY ./ ./
 RUN mvn -f ./pom.xml clean package
 
-COPY ./ ./
-ADD target/*.jar /backlog.jar
+COPY /target
 
-ENTRYPOINT [ "java", "-jar", "backlog.jar" ]
+ADD target/*.jar /app.jar
+
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
