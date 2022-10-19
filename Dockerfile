@@ -14,7 +14,7 @@ RUN printenv
 
 COPY . .
 
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 EXPOSE 8080
 
