@@ -1,6 +1,6 @@
 package com.fiapster.backlog.services;
 
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.mail.SimpleMailMessage;
 

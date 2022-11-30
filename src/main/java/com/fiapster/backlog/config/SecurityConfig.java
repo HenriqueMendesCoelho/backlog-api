@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,7 +28,7 @@ import com.fiapster.backlog.services.SmtpEmailService;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Secured(value = { "ROLE_USUARIO, ROLE_ADMIN" })
 public class SecurityConfig {
 	@Autowired
 	private ApplicationContext appContext;
@@ -60,7 +60,7 @@ public class SecurityConfig {
 		http.cors().and().csrf().disable();
         http
             .authorizeHttpRequests()
-            .antMatchers(PUBLIC_MATCHERS).permitAll()
+            .requestMatchers(PUBLIC_MATCHERS).permitAll()
     		.anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, appContext));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil, userDetailsService));
