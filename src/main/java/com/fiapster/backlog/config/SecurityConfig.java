@@ -16,8 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.fiapster.backlog.handlers.LoggerInterceptor;
 import com.fiapster.backlog.security.JWTAuthenticationFilter;
 import com.fiapster.backlog.security.JWTAuthorizationFilter;
 import com.fiapster.backlog.security.JWTUtil;
@@ -97,15 +99,6 @@ public class SecurityConfig {
 				
 			}
 		};
-	}
-	
-	@Bean
-	public CommonsRequestLoggingFilter requestLoggingFilter() {
-	    CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
-	    loggingFilter.setIncludeClientInfo(true);
-	    loggingFilter.setIncludeQueryString(true);
-	    loggingFilter.setIncludeHeaders(true);
-	    return loggingFilter;
 	}
 
 }
