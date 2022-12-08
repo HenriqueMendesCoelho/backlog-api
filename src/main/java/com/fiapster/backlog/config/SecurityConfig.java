@@ -104,7 +104,7 @@ public class SecurityConfig {
 	    CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
 	    loggingFilter.setIncludeClientInfo(true);
 	    loggingFilter.setIncludeQueryString(true);
-	    loggingFilter.setIncludePayload(false);
+	    loggingFilter.setIncludeHeaders(true);
 	    return loggingFilter;
 	}
 
