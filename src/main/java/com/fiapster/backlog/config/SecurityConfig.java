@@ -14,12 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.fiapster.backlog.handlers.LoggerInterceptor;
 import com.fiapster.backlog.security.JWTAuthenticationFilter;
 import com.fiapster.backlog.security.JWTAuthorizationFilter;
 import com.fiapster.backlog.security.JWTUtil;
@@ -64,6 +61,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests()
             .requestMatchers(PUBLIC_MATCHERS).permitAll()
+            .requestMatchers("/actuator/**").hasAuthority("ROLE_ADMIN")
     		.anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, appContext));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil, userDetailsService));
