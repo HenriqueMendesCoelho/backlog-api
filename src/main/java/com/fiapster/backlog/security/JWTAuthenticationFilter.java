@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +35,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     
     private AuthService service;
     
+    private static Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
+    
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ApplicationContext ctx) {
     	setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
@@ -44,16 +46,19 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 	
 	@Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		
 		try {
 			SysUserCredenciaisDTO creds = new ObjectMapper()
-	                .readValue(req.getInputStream(), SysUserCredenciaisDTO.class);
+	                .readValue(request.getInputStream(), SysUserCredenciaisDTO.class);
 	
 	        UsernamePasswordAuthenticationToken authToken = 
 	        		new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getSenha(), new ArrayList<>());
 	        
 	        Authentication auth = authenticationManager.authenticate(authToken);
+	        
+	        logRequest(request, response);
+	        
 	        return auth;
 		}
 		catch (IOException e) {
@@ -63,7 +68,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 	
 	@Override
-    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 		
 		String username = ((SysUserSS) auth.getPrincipal()).getUsername();
@@ -76,10 +81,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         	service.credTempUse(username);
         }
         
-        res.addHeader("Access-Control-Expose-Headers", "Authorization, tmp");
-        res.addHeader("Authorization", "Bearer " + token);
-        res.addHeader("tmp", tmp);
-        res.addDateHeader("Expires", hora.obterDataAgora() + jwtUtil.expiration);
+        response.addHeader("Access-Control-Expose-Headers", "Authorization, tmp");
+        response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("tmp", tmp);
+        response.addDateHeader("Expires", hora.obterDataAgora() + jwtUtil.expiration);
+	}
+	
+	private void logRequest(HttpServletRequest request, HttpServletResponse response) {
+		log.info("[" + response.getStatus() + "]" + "[" + request.getMethod()
+	      + "]" + request.getRequestURI() + "[from:" + request.getHeader("x-forwarded-for") + "]");
 	}
 	
 	
@@ -87,6 +97,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		@Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
                 throws IOException, ServletException {
+			
             response.setStatus(401);
             response.setContentType("application/json");
             
@@ -97,7 +108,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	        }else {
 	        	response.getWriter().append(jsonLocked());
 	        }
-
+	        
+	        logRequest(request, response);
         }
         
         private String jsonNormal() {
