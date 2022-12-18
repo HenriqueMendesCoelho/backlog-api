@@ -214,10 +214,8 @@ public class SysUserService {
 		}
 	}
 
-	public SysUser buscaUser(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
-		String header = request.getHeader("Authorization");
-
-		SysUser user = repo.findByEmail(jwtutil.getUsername(header.substring(7)));
+	public SysUser buscaUser(String loginUser) throws IllegalAccessException, ApiNotAcceptableException {
+		SysUser user = repo.findByEmail(loginUser);
 		
 		if (user == null) {
 			throw new IllegalAccessException("Usuário não encontrado");

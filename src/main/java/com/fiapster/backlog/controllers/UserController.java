@@ -20,10 +20,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fiapster.backlog.core.dto.UserDto;
 import com.fiapster.backlog.dto.EmailDTO;
 import com.fiapster.backlog.dto.SysUserAddPontosECreditosDTO;
 import com.fiapster.backlog.dto.SysUserAlteraSenhaDTO;
@@ -36,6 +39,7 @@ import com.fiapster.backlog.dto.ValidaLoginDTO;
 import com.fiapster.backlog.exceptions.ApiNotAcceptableException;
 import com.fiapster.backlog.models.SysUser;
 import com.fiapster.backlog.services.SysUserService;
+import com.fiapster.backlog.util.CredencialUtil;
 
 
 @RestController
@@ -48,8 +52,15 @@ public class UserController {
 	
 	// Busca usuario pelo email
 	@GetMapping("/busca")
-	public SysUser buscaUsuarioPorEmail(HttpServletRequest request) throws IllegalAccessException, ApiNotAcceptableException {
-		return service.buscaUser(request);
+	public SysUser buscaUsuarioPorEmail(@RequestHeader("Authorization") String token) throws IllegalAccessException, ApiNotAcceptableException {
+		try {
+			UserDto user = CredencialUtil.recuperarUsuario(token);
+			return service.buscaUser(user.getLogin());
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException("Erro ao recuperar usuário");
+		}
+		
 	}
 	
 	// Lista todos os usuarios rankeados pelos pontos
